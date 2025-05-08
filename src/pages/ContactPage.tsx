@@ -24,7 +24,7 @@ const ContactPage = () => {
     await saveContact({
       ...formData,
       device,
-      date: new Date().toISOString(),
+      // Note: date is now handled by the database service
     });
   };
 

@@ -4,27 +4,41 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import { type UseEmblaCarouselType } from "embla-carousel-react";
-import { GalleryItem } from "@/services/database";
+import { GalleryItem, getHomeGalleryItems } from "@/services/database";
 
 interface HomeGalleryProps {
-  items: GalleryItem[];
   autoplayInterval?: number;
-  title: string;
-  description: string;
-  ctaText: string;
-  ctaLink: string;
 }
 
 const HomeGallery: React.FC<HomeGalleryProps> = ({ 
-  items, 
   autoplayInterval = 5000,
-  title,
-  description,
-  ctaText,
-  ctaLink
 }) => {
+  const [items, setItems] = useState<GalleryItem[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [settings, setSettings] = useState({
+    title: "העבודות שלנו",
+    description: "הצצה לפרויקטים האחרונים שלנו",
+    ctaText: "צפה בכל העבודות",
+    ctaLink: "/gallery"
+  });
+  
+  // Load gallery items and settings
+  useEffect(() => {
+    // Get gallery items
+    const galleryItems = getHomeGalleryItems();
+    setItems(galleryItems);
+    
+    // Get settings
+    try {
+      const storedSettings = localStorage.getItem('homeGallerySettings');
+      if (storedSettings) {
+        setSettings(JSON.parse(storedSettings));
+      }
+    } catch (error) {
+      console.error("Error loading gallery settings:", error);
+    }
+  }, []);
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -64,7 +78,7 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
     return null;
   }
 
-  // Real images that will be used in the gallery - expanded to 6 images
+  // Real images that will be used if not enough gallery items
   const realImages = [
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f",
@@ -78,11 +92,11 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
   const displayItems = items.slice(0, 6);
   while (displayItems.length < 6) {
     const baseItem = items[0] || {
-      id: "placeholder",
+      id: `placeholder-${displayItems.length}`,
       title: "פרויקט לדוגמה",
       description: "תיאור של הפרויקט",
       category: "כללי",
-      imageUrl: ""
+      imageUrl: realImages[displayItems.length % realImages.length]
     };
     
     displayItems.push({
@@ -92,32 +106,26 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
     });
   }
 
-  // Update items with real images
-  const enhancedItems = displayItems.map((item, index) => ({
-    ...item,
-    imageUrl: realImages[index % realImages.length]
-  }));
-
   return (
     <section className="section-spacing bg-gray-50">
       <div className="container max-w-7xl mx-auto px-4">
         <div className="text-center mb-12" role="region" aria-label="גלריית עבודות">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">{settings.title}</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            {description}
+            {settings.description}
           </p>
         </div>
 
         <div className="max-w-5xl mx-auto mb-10">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
-              {enhancedItems.map((item, index) => (
+              {displayItems.map((item, index) => (
                 <div 
                   className="flex-[0_0_100%] min-w-0" 
                   key={item.id}
                   role="group"
                   aria-roledescription="slide"
-                  aria-label={`${index + 1} מתוך ${enhancedItems.length}`}
+                  aria-label={`${index + 1} מתוך ${displayItems.length}`}
                 >
                   <div className="p-1">
                     <div className="overflow-hidden rounded-xl shadow-lg">
@@ -140,7 +148,7 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
             </div>
           </div>
           <div className="flex justify-center gap-2 mt-4">
-            {enhancedItems.map((_, index) => (
+            {displayItems.map((_, index) => (
               <button
                 key={index}
                 className={`w-3 h-3 rounded-full ${
@@ -155,7 +163,7 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
           <div className="flex justify-center mt-6">
             <Button 
               onClick={() => emblaApi?.scrollPrev()} 
-              className="relative transform-none translate-y-0 mr-2"
+              className="relative transform-none translate-y-0 ml-2"
               variant="outline"
               size="icon"
               aria-label="תמונה קודמת"
@@ -166,7 +174,7 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
             </Button>
             <Button 
               onClick={() => emblaApi?.scrollNext()} 
-              className="relative transform-none translate-y-0 ml-2"
+              className="relative transform-none translate-y-0 mr-2"
               variant="outline"
               size="icon"
               aria-label="תמונה הבאה"
@@ -179,9 +187,9 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
         </div>
 
         <div className="text-center mt-8">
-          <Link to={ctaLink}>
+          <Link to={settings.ctaLink}>
             <Button size="lg" className="bg-bstudio-primary text-white hover:bg-bstudio-primary/90">
-              {ctaText}
+              {settings.ctaText}
             </Button>
           </Link>
         </div>

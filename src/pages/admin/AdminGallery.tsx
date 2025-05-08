@@ -99,28 +99,31 @@ const AdminGallery = () => {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between gap-4">
           <h1 className="text-2xl md:text-3xl font-bold">ניהול גלריה</h1>
-          <div className="space-x-2">
+          <div className="flex flex-wrap gap-2">
             <Button onClick={() => handleEdit(null)}>הוסף פריט</Button>
             <Button variant="outline" onClick={handleRefresh}>רענן</Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {galleryItems.map((item) => (
             <Card key={item.id} className="overflow-hidden">
-              <div className="aspect-square overflow-hidden">
+              <div className="aspect-square overflow-hidden bg-gray-100">
                 <img
                   src={item.imageUrl}
                   alt={item.title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://via.placeholder.com/150?text=Image+Error";
+                  }}
                 />
               </div>
               <div className="p-4 text-right">
                 <h3 className="font-bold text-lg mb-1">{item.title}</h3>
                 <p className="text-sm text-muted-foreground mb-2">{item.category}</p>
-                <div className="flex justify-end space-x-2">
+                <div className="flex justify-end space-x-2 gap-2">
                   <Button variant="outline" size="sm" onClick={() => handleEdit(item)}>
                     ערוך
                   </Button>
@@ -183,6 +186,7 @@ const AdminGallery = () => {
                 value={newItem.imageUrl}
                 onChange={handleInputChange}
                 className="text-right"
+                placeholder="הזן כתובת URL של תמונה"
               />
             </div>
             <div className="space-y-2">

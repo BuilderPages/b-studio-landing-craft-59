@@ -48,6 +48,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       ),
     },
     {
+      name: "גלריה דף בית",
+      path: "/admin/home-gallery",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      ),
+    },
+    {
       name: "תוכן",
       path: "/admin/content",
       icon: (
@@ -73,7 +83,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar for desktop */}
-      <aside className="hidden md:flex md:w-64 flex-col fixed inset-y-0 z-50 bg-white border-r">
+      <aside className="hidden md:flex md:w-64 flex-col fixed inset-y-0 z-50 bg-white border-l border-r-0">
         <div className="p-4 border-b">
           <Logo />
         </div>
@@ -90,7 +100,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               onClick={() => navigate(item.path)}
             >
               {item.icon}
-              <span className="ml-3">{item.name}</span>
+              <span className="mr-3">{item.name}</span>
             </div>
           ))}
         </nav>
@@ -104,7 +114,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
-            <span className="ml-3">חזרה לאתר</span>
+            <span className="mr-3">חזרה לאתר</span>
           </div>
         </div>
       </aside>
@@ -112,7 +122,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {/* Mobile menu */}
       <div className="md:hidden fixed top-0 z-50 w-full bg-white border-b p-4">
         <div className="flex items-center justify-between">
-          <Logo />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-gray-600 focus:outline-none"
@@ -141,6 +150,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               )}
             </svg>
           </button>
+          <Logo />
         </div>
       </div>
 
@@ -149,7 +159,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <div className="md:hidden fixed inset-0 z-40 bg-gray-600 bg-opacity-75">
           <div className="fixed inset-y-0 right-0 flex flex-col w-64 bg-white h-full shadow-lg">
             <div className="p-4 border-b flex justify-between items-center">
-              <Logo />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-gray-600 focus:outline-none"
@@ -169,6 +178,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   />
                 </svg>
               </button>
+              <Logo />
             </div>
             <nav className="mt-5 flex-1 px-2 space-y-1 overflow-y-auto">
               {menuItems.map((item) => (
@@ -186,7 +196,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   }}
                 >
                   {item.icon}
-                  <span className="ml-3">{item.name}</span>
+                  <span className="mr-3">{item.name}</span>
                 </div>
               ))}
             </nav>
@@ -203,7 +213,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   <polyline points="16 17 21 12 16 7"></polyline>
                   <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                <span className="ml-3">חזרה לאתר</span>
+                <span className="mr-3">חזרה לאתר</span>
               </div>
             </div>
           </div>
@@ -211,9 +221,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col md:ml-64 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col md:mr-64 h-full overflow-hidden">
         <div className="pt-16 md:pt-0 h-full overflow-y-auto">
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-4 md:p-6">
             {children}
           </main>
         </div>
