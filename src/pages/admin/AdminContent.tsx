@@ -12,6 +12,7 @@ import {
   updateFooterContent,
   FooterContent
 } from "@/services/database";
+import { getCurrentYear } from "@/utils/dateUtils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -542,7 +543,7 @@ const AdminContent = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <label htmlFor="copyrightText" className="text-right block">טקסט זכויות יוצרים (השתמש ב-{year} לשנה הנוכחית)</label>
+                  <label htmlFor="copyrightText" className="text-right block">טקסט זכויות יוצרים (השתמש ב-{'{year}'} לשנה הנוכחית)</label>
                   <Input
                     id="copyrightText"
                     name="copyrightText"
