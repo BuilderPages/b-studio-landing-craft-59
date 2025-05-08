@@ -51,6 +51,8 @@ const Navbar = () => {
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center"
+            aria-label={mobileMenuOpen ? "סגור תפריט" : "פתח תפריט"}
+            aria-expanded={mobileMenuOpen}
           >
             <svg
               className="w-6 h-6"

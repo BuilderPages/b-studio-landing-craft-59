@@ -77,6 +77,41 @@
   }
 }
 
+/* High contrast mode */
+.high-contrast {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  --primary: 0 0% 0%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 0%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 90%;
+  --muted-foreground: 0 0% 0%;
+  --accent: 0 0% 0%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 100% 30%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 0%;
+  
+  /* Additional high contrast styles */
+  & a {
+    text-decoration: underline;
+    color: #000000;
+  }
+  
+  & button, & .button {
+    border: 2px solid #000000;
+  }
+  
+  & img {
+    filter: grayscale(100%);
+  }
+}
+
 .hero-gradient {
   @apply bg-gradient-to-br from-bstudio-primary to-bstudio-secondary;
 }
@@ -117,4 +152,15 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-bstudio-secondary/50 hover:bg-bstudio-secondary rounded-full;
+}
+
+/* Focus styles for better accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Skip to content link - accessibility feature */
+.skip-to-content {
+  @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-4 focus:rounded;
 }

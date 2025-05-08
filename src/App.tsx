@@ -8,12 +8,15 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import GalleryPage from "./pages/GalleryPage";
 import ContactPage from "./pages/ContactPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AccessibilityStatement from "./pages/AccessibilityStatement";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminContacts from "./pages/admin/AdminContacts";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AccessibilityWidget from "./components/AccessibilityWidget";
 
 const queryClient = new QueryClient();
 
@@ -29,10 +32,17 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          {/* Skip to content link - accessibility feature */}
+          <a href="#main-content" className="skip-to-content">
+            דלג לתוכן העיקרי
+          </a>
+          
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/accessibility" element={<AccessibilityStatement />} />
             
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminDashboard />} />
@@ -44,6 +54,9 @@ const App = () => {
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          
+          {/* Accessibility widget */}
+          <AccessibilityWidget />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
