@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { getSiteContent, updateSiteContent, getNavigation, updateNavigation } from "@/services/database";
+import { getSiteContent, updateSiteContent, getNavigation, updateNavigation, getFooterContent, updateFooterContent } from "@/services/database";
 import { replaceYearPlaceholder } from "@/utils/contentUtils";
+import { v4 as uuidv4 } from 'uuid';
 
 // Define types for site content and navigation
 interface SiteContent {
@@ -31,6 +32,7 @@ interface SiteContent {
     phone: string;
     email: string;
     address: string;
+    whatsapp?: string;
   };
   footerText: string;
   [key: string]: any;
@@ -48,19 +50,49 @@ interface Navigation {
   [key: string]: any;
 }
 
+interface FooterLinkItem {
+  label: string;
+  url: string;
+}
+
+interface SocialLinkItem {
+  name: string;
+  url: string;
+  icon: string;
+}
+
+interface FooterContent {
+  description: string;
+  quickLinksTitle: string;
+  quickLinks: FooterLinkItem[];
+  servicesTitle: string;
+  serviceLinks: FooterLinkItem[];
+  contactTitle: string;
+  contactInfo: {
+    phone: string;
+    email: string;
+    address: string;
+  };
+  copyrightText: string;
+  socialLinks: SocialLinkItem[];
+}
+
 const AdminContent = () => {
   const { toast } = useToast();
   const [content, setContent] = useState<SiteContent>({} as SiteContent);
   const [navigation, setNavigation] = useState<Navigation>({ items: [] });
+  const [footerContent, setFooterContent] = useState<FooterContent>({} as FooterContent);
   const [activeTab, setActiveTab] = useState("main");
 
   useEffect(() => {
     // Load content and navigation on component mount
     const siteContent = getSiteContent();
     const navItems = getNavigation();
+    const footer = getFooterContent();
     
     setContent(siteContent as SiteContent);
     setNavigation(navItems as Navigation);
+    setFooterContent(footer as FooterContent);
   }, []);
 
   const handleContentChange = (key: string, value: string) => {
@@ -86,7 +118,7 @@ const AdminContent = () => {
   };
 
   const addNavItem = () => {
-    const newId = Date.now().toString();
+    const newId = uuidv4();
     const newItem = { id: newId, label: "פריט חדש", url: "/" };
     setNavigation({ ...navigation, items: [...navigation.items, newItem] });
   };
@@ -97,12 +129,73 @@ const AdminContent = () => {
     setNavigation({ ...navigation, items: updatedItems });
   };
 
-  const saveChanges = (type: 'content' | 'navigation') => {
+  const handleFooterChange = (key: string, value: string) => {
+    if (key.includes('.')) {
+      const [parentKey, childKey] = key.split('.');
+      setFooterContent(prev => ({
+        ...prev,
+        [parentKey]: {
+          ...prev[parentKey],
+          [childKey]: value
+        }
+      }));
+    } else {
+      setFooterContent(prev => ({ ...prev, [key]: value }));
+    }
+  };
+
+  const handleFooterLinkChange = (section: 'quickLinks' | 'serviceLinks', index: number, key: string, value: string) => {
+    const updatedLinks = [...footerContent[section]];
+    updatedLinks[index] = { ...updatedLinks[index], [key]: value };
+    setFooterContent({ ...footerContent, [section]: updatedLinks });
+  };
+
+  const addFooterLink = (section: 'quickLinks' | 'serviceLinks') => {
+    const newLink = { label: "קישור חדש", url: "/" };
+    setFooterContent({ 
+      ...footerContent, 
+      [section]: [...(footerContent[section] || []), newLink]
+    });
+  };
+
+  const removeFooterLink = (section: 'quickLinks' | 'serviceLinks', index: number) => {
+    const updatedLinks = [...footerContent[section]];
+    updatedLinks.splice(index, 1);
+    setFooterContent({ ...footerContent, [section]: updatedLinks });
+  };
+
+  const handleSocialLinkChange = (index: number, key: string, value: string) => {
+    const updatedLinks = [...footerContent.socialLinks];
+    updatedLinks[index] = { ...updatedLinks[index], [key]: value };
+    setFooterContent({ ...footerContent, socialLinks: updatedLinks });
+  };
+
+  const addSocialLink = () => {
+    const newLink = { 
+      name: "רשת חברתית חדשה", 
+      url: "/", 
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z"/></svg>`
+    };
+    setFooterContent({ 
+      ...footerContent, 
+      socialLinks: [...(footerContent.socialLinks || []), newLink]
+    });
+  };
+
+  const removeSocialLink = (index: number) => {
+    const updatedLinks = [...footerContent.socialLinks];
+    updatedLinks.splice(index, 1);
+    setFooterContent({ ...footerContent, socialLinks: updatedLinks });
+  };
+
+  const saveChanges = (type: 'content' | 'navigation' | 'footer') => {
     try {
       if (type === 'content') {
         updateSiteContent(content);
-      } else {
+      } else if (type === 'navigation') {
         updateNavigation(navigation);
+      } else if (type === 'footer') {
+        updateFooterContent(footerContent);
       }
       
       toast({
@@ -119,7 +212,6 @@ const AdminContent = () => {
   };
   
   const renderFooterPreview = () => {
-    const year = new Date().getFullYear();
     return replaceYearPlaceholder(content.footerText);
   };
 
@@ -177,6 +269,13 @@ const AdminContent = () => {
                 >
                   תפריט ניווט
                 </Button>
+                <Button 
+                  variant={activeTab === "footer_content" ? "default" : "outline"} 
+                  className="w-full justify-start" 
+                  onClick={() => setActiveTab("footer_content")}
+                >
+                  עיצוב פוטר מורחב
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -191,6 +290,7 @@ const AdminContent = () => {
                 {activeTab === "gallery" && "עריכת גלריה"}
                 {activeTab === "footer" && "עריכת פוטר"}
                 {activeTab === "navigation" && "עריכת תפריט ניווט"}
+                {activeTab === "footer_content" && "עיצוב פוטר מורחב"}
               </CardTitle>
               <CardDescription>
                 כאן תוכל לערוך את תוכן האתר. השינויים יופיעו באתר מיד לאחר שמירה.
@@ -331,6 +431,14 @@ const AdminContent = () => {
                     onChange={(e) => handleContentChange('contactInfo.address', e.target.value)} 
                     className="text-right"
                   />
+
+                  <h3 className="text-lg font-medium">מספר וואטסאפ</h3>
+                  <Input 
+                    value={content.contactInfo?.whatsapp || ""} 
+                    onChange={(e) => handleContentChange('contactInfo.whatsapp', e.target.value)} 
+                    className="text-right"
+                    placeholder="972XXXXXXXX - פורמט בינלאומי ללא +, לדוגמה: 9721234567890"
+                  />
                 </div>
               )}
 
@@ -446,9 +554,176 @@ const AdminContent = () => {
                   </div>
                 </div>
               )}
+
+              {/* Footer Extended Content Editor */}
+              {activeTab === "footer_content" && (
+                <div className="space-y-6">
+                  <h3 className="text-lg font-medium">תיאור כללי פוטר</h3>
+                  <Textarea
+                    value={footerContent.description || ""}
+                    onChange={(e) => handleFooterChange('description', e.target.value)}
+                    className="text-right min-h-20"
+                  />
+                  
+                  <div className="border-t pt-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium">קישורים מהירים</h3>
+                      <Button size="sm" onClick={() => addFooterLink('quickLinks')}>הוסף קישור</Button>
+                    </div>
+
+                    <div className="space-y-2 mb-2">
+                      <h4 className="text-sm font-medium">כותרת אזור</h4>
+                      <Input
+                        value={footerContent.quickLinksTitle || ""}
+                        onChange={(e) => handleFooterChange('quickLinksTitle', e.target.value)}
+                        className="text-right"
+                      />
+                    </div>
+                    
+                    {footerContent.quickLinks?.map((link, index) => (
+                      <div key={index} className="flex items-center gap-2 mb-2 p-2 border rounded">
+                        <Input
+                          value={link.label}
+                          onChange={(e) => handleFooterLinkChange('quickLinks', index, 'label', e.target.value)}
+                          placeholder="תווית"
+                          className="text-right"
+                        />
+                        <Input
+                          value={link.url}
+                          onChange={(e) => handleFooterLinkChange('quickLinks', index, 'url', e.target.value)}
+                          placeholder="קישור URL"
+                          className="text-right"
+                        />
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="flex-shrink-0 text-red-500 hover:text-red-700" 
+                          onClick={() => removeFooterLink('quickLinks', index)}
+                        >
+                          X
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium">קישורי שירותים</h3>
+                      <Button size="sm" onClick={() => addFooterLink('serviceLinks')}>הוסף קישור</Button>
+                    </div>
+
+                    <div className="space-y-2 mb-2">
+                      <h4 className="text-sm font-medium">כותרת אזור</h4>
+                      <Input
+                        value={footerContent.servicesTitle || ""}
+                        onChange={(e) => handleFooterChange('servicesTitle', e.target.value)}
+                        className="text-right"
+                      />
+                    </div>
+                    
+                    {footerContent.serviceLinks?.map((link, index) => (
+                      <div key={index} className="flex items-center gap-2 mb-2 p-2 border rounded">
+                        <Input
+                          value={link.label}
+                          onChange={(e) => handleFooterLinkChange('serviceLinks', index, 'label', e.target.value)}
+                          placeholder="תווית"
+                          className="text-right"
+                        />
+                        <Input
+                          value={link.url}
+                          onChange={(e) => handleFooterLinkChange('serviceLinks', index, 'url', e.target.value)}
+                          placeholder="קישור URL"
+                          className="text-right"
+                        />
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-shrink-0 text-red-500 hover:text-red-700"
+                          onClick={() => removeFooterLink('serviceLinks', index)}
+                        >
+                          X
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h3 className="text-lg font-medium mb-4">פרטי קשר בפוטר</h3>
+                    <div className="space-y-2 mb-2">
+                      <h4 className="text-sm font-medium">כותרת אזור</h4>
+                      <Input
+                        value={footerContent.contactTitle || ""}
+                        onChange={(e) => handleFooterChange('contactTitle', e.target.value)}
+                        className="text-right"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium">קישורים חברתיים</h3>
+                      <Button size="sm" onClick={addSocialLink}>הוסף קישור חברתי</Button>
+                    </div>
+                    
+                    {footerContent.socialLinks?.map((link, index) => (
+                      <div key={index} className="flex items-center gap-2 mb-4 p-3 border rounded">
+                        <div className="grid grid-cols-1 gap-2 w-full">
+                          <Input
+                            value={link.name}
+                            onChange={(e) => handleSocialLinkChange(index, 'name', e.target.value)}
+                            placeholder="שם (לדוגמה: פייסבוק)"
+                            className="text-right"
+                          />
+                          <Input
+                            value={link.url}
+                            onChange={(e) => handleSocialLinkChange(index, 'url', e.target.value)}
+                            placeholder="קישור URL"
+                            className="text-right"
+                          />
+                          <Textarea
+                            value={link.icon}
+                            onChange={(e) => handleSocialLinkChange(index, 'icon', e.target.value)}
+                            placeholder="קוד SVG לאייקון"
+                            className="text-right min-h-20"
+                          />
+                          <div className="bg-gray-50 p-2 rounded">
+                            <div dangerouslySetInnerHTML={{ __html: link.icon }} />
+                          </div>
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-shrink-0 h-10 text-red-500 hover:text-red-700"
+                          onClick={() => removeSocialLink(index)}
+                        >
+                          X
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h3 className="text-lg font-medium mb-4">טקסט זכויות יוצרים</h3>
+                    <Input
+                      value={footerContent.copyrightText || ""}
+                      onChange={(e) => handleFooterChange('copyrightText', e.target.value)}
+                      placeholder="השתמש ב-{year} כדי להציג את השנה הנוכחית"
+                      className="text-right"
+                    />
+                  </div>
+                </div>
+              )}
               
               <div className="pt-6 flex justify-end">
-                <Button onClick={() => saveChanges(activeTab === "navigation" ? "navigation" : "content")}>
+                <Button onClick={() => {
+                  if (activeTab === "navigation") {
+                    saveChanges("navigation");
+                  } else if (activeTab === "footer_content") {
+                    saveChanges("footer");
+                  } else {
+                    saveChanges("content");
+                  }
+                }}>
                   שמור שינויים
                 </Button>
               </div>

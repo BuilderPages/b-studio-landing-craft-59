@@ -1,11 +1,10 @@
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { GalleryItem } from "@/services/database";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { type UseEmblaCarouselType } from "embla-carousel-react";
 import useEmblaCarousel from "embla-carousel-react";
+import { type UseEmblaCarouselType } from "embla-carousel-react";
+import { GalleryItem } from "@/services/database";
 
 interface HomeGalleryProps {
   items: GalleryItem[];
@@ -65,7 +64,7 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
     return null;
   }
 
-  // Real images that will be used in the gallery
+  // Real images that will be used in the gallery - expanded to 6 images
   const realImages = [
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f",
@@ -75,8 +74,26 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
     "https://images.unsplash.com/photo-1555421689-491a97ff2040"
   ];
 
+  // Make sure we have 6 items to display
+  const displayItems = items.slice(0, 6);
+  while (displayItems.length < 6) {
+    const baseItem = items[0] || {
+      id: "placeholder",
+      title: "פרויקט לדוגמה",
+      description: "תיאור של הפרויקט",
+      category: "כללי",
+      imageUrl: ""
+    };
+    
+    displayItems.push({
+      ...baseItem,
+      id: `placeholder-${displayItems.length}`,
+      imageUrl: realImages[displayItems.length % realImages.length]
+    });
+  }
+
   // Update items with real images
-  const enhancedItems = items.map((item, index) => ({
+  const enhancedItems = displayItems.map((item, index) => ({
     ...item,
     imageUrl: realImages[index % realImages.length]
   }));

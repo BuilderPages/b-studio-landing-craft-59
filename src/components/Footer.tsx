@@ -23,7 +23,7 @@ const Footer = () => {
           <div className="text-right">
             <h3 className="font-bold text-gray-800 mb-4">{footerContent.quickLinksTitle}</h3>
             <div className="space-y-2 flex flex-col items-end">
-              {footerContent.quickLinks.map((link, index) => (
+              {footerContent.quickLinks?.map((link, index) => (
                 <Link 
                   key={index}
                   to={link.url} 
@@ -38,7 +38,7 @@ const Footer = () => {
           <div className="text-right">
             <h3 className="font-bold text-gray-800 mb-4">{footerContent.servicesTitle}</h3>
             <div className="space-y-2 flex flex-col items-end">
-              {footerContent.serviceLinks.map((link, index) => (
+              {footerContent.serviceLinks?.map((link, index) => (
                 <Link 
                   key={index}
                   to={link.url} 
@@ -53,9 +53,9 @@ const Footer = () => {
           <div className="text-right">
             <h3 className="font-bold text-gray-800 mb-4">{footerContent.contactTitle}</h3>
             <div className="space-y-2 flex flex-col items-end">
-              <p className="text-gray-600">{footerContent.contactInfo.phone}</p>
-              <p className="text-gray-600">{footerContent.contactInfo.email}</p>
-              <p className="text-gray-600">{footerContent.contactInfo.address}</p>
+              <p className="text-gray-600">{footerContent.contactInfo?.phone}</p>
+              <p className="text-gray-600">{footerContent.contactInfo?.email}</p>
+              <p className="text-gray-600">{footerContent.contactInfo?.address}</p>
             </div>
           </div>
         </div>
@@ -71,10 +71,10 @@ const Footer = () => {
             </Link>
           </div>
           
-          <p className="text-gray-500">{footerContent.copyrightText.replace('{year}', year)}</p>
+          <p className="text-gray-500">{(footerContent.copyrightText || "© {year} B Studio. כל הזכויות שמורות.").replace('{year}', year)}</p>
           
           <div className="mt-4 md:mt-0 flex justify-center space-x-4">
-            {footerContent.socialLinks.map((social, index) => (
+            {footerContent.socialLinks?.map((social, index) => (
               <a 
                 key={index}
                 href={social.url} 

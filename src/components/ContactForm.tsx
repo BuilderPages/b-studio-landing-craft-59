@@ -1,72 +1,71 @@
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
-import { addContact } from "@/services/database";
+import { saveContact } from "@/services/database";
 import { Link } from "react-router-dom";
 
-// Form schema with validation
+// Schema for form validation
 const formSchema = z.object({
-  name: z.string().min(2, "השם חייב להכיל לפחות 2 תווים"),
-  email: z.string().email("אנא הכנס כתובת אימייל תקינה"),
-  phone: z.string().min(9, "אנא הכנס מספר טלפון תקין").max(15, "מספר הטלפון ארוך מדי"),
-  message: z.string().min(5, "ההודעה חייבת להכיל לפחות 5 תווים"),
+  name: z.string().min(2, { message: "השם צריך להכיל לפחות 2 תווים" }),
+  email: z.string().email({ message: "כתובת אימייל לא תקינה" }),
   subject: z.string().optional(),
-  privacyConsent: z.literal(true, {
-    errorMap: () => ({ message: "יש לאשר את מדיניות הפרטיות כדי להמשיך" })
-  })
+  message: z.string().min(10, { message: "ההודעה צריכה להכיל לפחות 10 תווים" }),
+  privacyConsent: z.boolean().refine(val => val === true, {
+    message: "יש לאשר את מדיניות הפרטיות",
+  }),
 });
 
 export type ContactFormData = z.infer<typeof formSchema>;
 
-interface ContactFormProps {
-  onSubmit?: (data: ContactFormData) => Promise<void> | void;
+export interface ContactFormProps {
+  onSubmit?: (formData: ContactFormData) => Promise<void>;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm<ContactFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
-      message: "",
       subject: "",
-      privacyConsent: false as any // Cast to any to bypass TypeScript check temporarily
-    }
+      message: "",
+      privacyConsent: false,
+    },
   });
-  
+
   const handleSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
+    
     try {
-      // Remove consent field before sending
-      const { privacyConsent, ...contactData } = data;
-      
-      // Submit form data
       if (onSubmit) {
         await onSubmit(data);
       } else {
-        addContact(contactData);
+        // Default submission handling
+        saveContact({
+          name: data.name,
+          email: data.email,
+          subject: data.subject,
+          message: data.message,
+        });
       }
       
-      // Reset form
-      form.reset();
-      
-      // Show success message
       toast({
-        title: "ההודעה נשלחה בהצלחה",
-        description: "נחזור אליך בהקדם האפשרי.",
+        title: "פנייתך התקבלה בהצלחה",
+        description: "נציג שלנו יצור איתך קשר בהקדם האפשרי.",
       });
+      
+      form.reset();
     } catch (error) {
       toast({
         title: "שגיאה בשליחת הטופס",
@@ -77,145 +76,109 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
       setIsSubmitting(false);
     }
   };
-  
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-right block">שם מלא</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="הכנס את שמך המלא" 
-                  {...field} 
-                  className="text-right"
-                  aria-required="true"
-                />
-              </FormControl>
-              <FormMessage className="text-right" />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-right block">אימייל</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="הכנס את כתובת האימייל שלך" 
-                  type="email" 
-                  {...field} 
-                  className="text-right"
-                  aria-required="true"
-                />
-              </FormControl>
-              <FormMessage className="text-right" />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-right block">טלפון</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="הכנס את מספר הטלפון שלך" 
-                  type="tel" 
-                  {...field} 
-                  className="text-right"
-                  aria-required="true"
-                />
-              </FormControl>
-              <FormMessage className="text-right" />
-            </FormItem>
-          )}
-        />
 
-        <FormField
-          control={form.control}
-          name="subject"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-right block">נושא</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="נושא ההודעה" 
-                  {...field} 
-                  className="text-right"
-                />
-              </FormControl>
-              <FormMessage className="text-right" />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-right block">הודעה</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="כתוב את הודעתך כאן" 
-                  {...field} 
-                  className="text-right min-h-32"
-                  aria-required="true"
-                />
-              </FormControl>
-              <FormMessage className="text-right" />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="privacyConsent"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rtl:space-x-reverse">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  aria-required="true"
-                />
-              </FormControl>
-              <div className="text-right">
-                <FormLabel className="text-sm font-normal cursor-pointer">
-                  קראתי ואני מסכים/ה ל<Link to="/privacy" className="text-bstudio-primary hover:underline" target="_blank">מדיניות הפרטיות</Link>
-                </FormLabel>
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-right">יצירת קשר</h2>
+      
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="text-right">
+                <FormLabel>שם מלא</FormLabel>
+                <FormControl>
+                  <Input placeholder="הזן את שמך המלא" {...field} className="text-right" />
+                </FormControl>
                 <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-  
-        <Button 
-          type="submit" 
-          className="w-full" 
-          disabled={isSubmitting}
-          aria-busy={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <span className="loader mr-2"></span>
-              שולח...
-            </>
-          ) : (
-            "שלח הודעה"
-          )}
-        </Button>
-      </form>
-    </Form>
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="text-right">
+                <FormLabel>דואר אלקטרוני</FormLabel>
+                <FormControl>
+                  <Input placeholder="הזן את כתובת האימייל שלך" {...field} className="text-right" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem className="text-right">
+                <FormLabel>נושא (אופציונלי)</FormLabel>
+                <FormControl>
+                  <Input placeholder="הזן את נושא הפנייה" {...field} className="text-right" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem className="text-right">
+                <FormLabel>הודעה</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    placeholder="כתוב את הודעתך כאן"
+                    className="min-h-[120px] text-right"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="privacyConsent"
+            render={({ field }) => (
+              <FormItem className="flex flex-row-reverse items-start space-x-3 space-x-reverse">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none text-right">
+                  <FormLabel>
+                    אני מסכים/ה ל<Link to="/privacy" className="text-bstudio-primary hover:underline">מדיניות הפרטיות</Link>
+                  </FormLabel>
+                  <FormDescription className="text-xs">
+                    המידע שתמסור ישמש אותנו ליצירת קשר בלבד ולא יועבר לגורמים שלישיים
+                  </FormDescription>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="pt-2">
+            <Button 
+              type="submit" 
+              className="w-full bg-bstudio-primary hover:bg-bstudio-primary/90" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "שולח..." : "שלח"}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 };
 

@@ -2,122 +2,129 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { getNavigation } from "@/services/database";
+import { cn } from "@/lib/utils";
+import { Menu } from "lucide-react";
+
+interface NavItem {
+  id: string;
+  label: string;
+  url: string;
+  highlight?: boolean;
+}
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navigation = getNavigation();
+  const navItems = getNavigation().items || [];
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
+      const isScrolled = window.scrollY > 20;
       if (isScrolled !== scrolled) {
         setScrolled(isScrolled);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [scrolled]);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   return (
     <header
       className={cn(
-        "fixed w-full top-0 z-50 transition-all duration-300 bg-transparent",
-        scrolled && "bg-white/90 backdrop-blur-md shadow-sm"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled ? "bg-white shadow-md py-3" : "bg-transparent py-6"
       )}
     >
-      <div className="container max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+      <div className="container max-w-7xl mx-auto px-4 flex items-center justify-between">
+        <Link to="/" className="flex items-center">
           <Logo />
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navigation.items.map((item) => (
-              <NavLink 
-                key={item.id}
-                to={item.url} 
-                label={item.label} 
-                className={item.highlight ? "text-bstudio-primary" : ""} 
-              />
-            ))}
-          </nav>
-          
-          {/* Mobile menu button */}
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center"
-            aria-label={mobileMenuOpen ? "סגור תפריט" : "פתח תפריט"}
-            aria-expanded={mobileMenuOpen}
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          {navItems.map((item) => (
+            <Link
+              key={item.id}
+              to={item.url}
+              className={cn(
+                "text-lg transition-colors mx-2", // Added mx-2 for spacing
+                scrolled
+                  ? item.highlight
+                    ? "text-bstudio-primary font-medium"
+                    : "text-gray-700 hover:text-bstudio-primary"
+                  : item.highlight
+                  ? "text-white font-medium"
+                  : "text-white/90 hover:text-white"
               )}
-            </svg>
-          </button>
-        </div>
-        
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 space-y-2 flex flex-col items-end bg-white/90 backdrop-blur-md">
-            {navigation.items.map((item) => (
-              <NavLink 
-                key={item.id}
-                to={item.url} 
-                label={item.label} 
-                onClick={() => setMobileMenuOpen(false)} 
-                className={item.highlight ? "text-bstudio-primary" : ""} 
-              />
-            ))}
-          </div>
-        )}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link to="/contact">
+            <Button
+              size="lg"
+              className={cn(
+                "bg-bstudio-primary hover:bg-bstudio-primary/90 text-white",
+                scrolled ? "shadow-sm" : "shadow-lg"
+              )}
+            >
+              צור קשר
+            </Button>
+          </Link>
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-2xl"
+          onClick={toggleMobileMenu}
+          aria-label="תפריט"
+        >
+          <Menu 
+            className={cn(
+              "w-8 h-8",
+              scrolled ? "text-gray-800" : "text-white"
+            )}
+          />
+        </button>
       </div>
-    </header>
-  );
-};
 
-interface NavLinkProps {
-  to: string;
-  label: string;
-  className?: string;
-  onClick?: () => void;
-}
-
-const NavLink: React.FC<NavLinkProps> = ({ to, label, className, onClick }) => {
-  return (
-    <Link
-      to={to}
-      className={cn(
-        "text-gray-800 hover:text-bstudio-secondary font-medium transition-colors duration-200",
-        className
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t">
+          <div className="container px-4 py-3">
+            <nav className="flex flex-col items-end space-y-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.id}
+                  to={item.url}
+                  className={cn(
+                    "text-lg",
+                    item.highlight
+                      ? "text-bstudio-primary font-medium"
+                      : "text-gray-700 hover:text-bstudio-primary"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>
+                <Button size="lg" className="bg-bstudio-primary hover:bg-bstudio-primary/90 text-white shadow-sm">
+                  צור קשר
+                </Button>
+              </Link>
+            </nav>
+          </div>
+        </div>
       )}
-      onClick={onClick}
-    >
-      {label}
-    </Link>
+    </header>
   );
 };
 

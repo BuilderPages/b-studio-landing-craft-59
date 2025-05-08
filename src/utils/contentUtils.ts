@@ -1,11 +1,11 @@
 
 /**
- * Replaces {year} placeholder with the current year
- * @param text Text containing {year} placeholder
- * @returns Text with {year} replaced with current year
+ * Replaces the {year} placeholder with the current year
+ * @param text The text containing the placeholder
+ * @returns The text with the placeholder replaced with the current year
  */
 export const replaceYearPlaceholder = (text: string): string => {
   if (!text) return '';
-  const currentYear = new Date().getFullYear();
-  return text.replace(/{year}/g, currentYear.toString());
+  const year = new Date().getFullYear().toString();
+  return text.replace(/\{year\}/g, year);
 };
