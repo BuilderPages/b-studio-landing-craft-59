@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,9 +6,9 @@ import { recordPageView } from "@/services/database";
 const AccessibilityStatement = () => {
   useEffect(() => {
     // Record page view for analytics
-    recordPageView('/accessibility');
+    recordPageView();
   }, []);
-
+  
   return (
     <div className="min-h-screen">
       <Navbar />

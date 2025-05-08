@@ -1,200 +1,170 @@
-
 import React, { useState } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
-import { getContacts, deleteContact } from "@/services/database";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { ContactFormData } from "@/components/ContactForm";
-
-// Define the Contact type that matches what's in the database
-export interface Contact extends Omit<ContactFormData, 'privacyConsent'> {
-  id: string;
-  date?: string;
-  device?: string;
-}
+import { getContacts, Contact } from "@/services/database";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { Search } from "lucide-react";
 
 const AdminContacts = () => {
-  const { toast } = useToast();
   const [contacts, setContacts] = useState<Contact[]>(getContacts());
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
-  const handleRefresh = () => {
-    setContacts(getContacts());
-    toast({
-      title: "נתונים עודכנו",
-      description: "רשימת הפניות עודכנה בהצלחה.",
-    });
+  const handleDelete = (id: string) => {
+    const updatedContacts = contacts.filter(contact => contact.id !== id);
+    setContacts(updatedContacts);
+    
+    localStorage.setItem("b-studio-contacts", JSON.stringify(updatedContacts));
   };
 
-  const handleDelete = (id: string | undefined) => {
-    if (id) {
-      deleteContact(id);
-      setContacts(getContacts());
-      setShowDeleteDialog(false);
-      toast({
-        title: "פנייה נמחקה",
-        description: "הפנייה נמחקה בהצלחה.",
-      });
-    }
-  };
+  const filteredContacts = contacts.filter(contact => {
+    const search = searchTerm.toLowerCase();
+    return (
+      contact.name.toLowerCase().includes(search) ||
+      contact.email.toLowerCase().includes(search) ||
+      (contact.subject && contact.subject.toLowerCase().includes(search)) ||
+      contact.message.toLowerCase().includes(search)
+    );
+  });
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl md:text-3xl font-bold">ניהול פניות</h1>
-          <Button onClick={handleRefresh}>רענן</Button>
-        </div>
-
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    שם
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    אימייל
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    טלפון
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    נושא
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    תאריך
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    פעולות
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {contacts.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-4 text-center text-muted-foreground">
-                      אין פניות חדשות
-                    </td>
-                  </tr>
-                ) : (
-                  contacts.map((contact) => (
-                    <tr key={contact.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="text-sm font-medium text-gray-900">{contact.name}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="text-sm text-gray-500">{contact.email}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="text-sm text-gray-500">{contact.phone}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="text-sm text-gray-500">{contact.subject || "לא צוין"}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                        {contact.date ? new Date(contact.date).toLocaleDateString() : "לא זמין"}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Button
-                          variant="ghost"
-                          className="text-bstudio-primary hover:text-bstudio-primary/80 px-2"
-                          onClick={() => setSelectedContact(contact)}
-                        >
-                          הצג
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="text-red-600 hover:text-red-800 px-2"
-                          onClick={() => {
-                            setSelectedContact(contact);
-                            setShowDeleteDialog(true);
-                          }}
-                        >
-                          מחק
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">ניהול פניות</h1>
+        <div className="relative w-64">
+          <Input
+            type="text"
+            placeholder="חיפוש פניות..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pr-10 text-right"
+          />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
         </div>
       </div>
 
-      {/* View contact details */}
-      <Dialog open={!!selectedContact && !showDeleteDialog} onOpenChange={(open) => !open && setSelectedContact(null)}>
-        <DialogContent className="max-w-md">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">פניות שהתקבלו</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {filteredContacts.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-right">פעולות</TableHead>
+                  <TableHead className="text-right">תאריך</TableHead>
+                  <TableHead className="text-right">נושא</TableHead>
+                  <TableHead className="text-right">אימייל</TableHead>
+                  <TableHead className="text-right">שם</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredContacts.map((contact) => (
+                  <TableRow key={contact.id}>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedContact(contact);
+                            setIsViewDialogOpen(true);
+                          }}
+                        >
+                          צפייה
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDelete(contact.id)}
+                        >
+                          מחיקה
+                        </Button>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {contact.date
+                        ? format(new Date(contact.date), "dd/MM/yyyy HH:mm")
+                        : "לא צוין"}
+                    </TableCell>
+                    <TableCell>{contact.subject || "פנייה כללית"}</TableCell>
+                    <TableCell>{contact.email}</TableCell>
+                    <TableCell>{contact.name}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-lg text-gray-500">לא נמצאו פניות</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>פרטי הפנייה</DialogTitle>
+            <DialogTitle className="text-right text-xl">פרטי הפנייה</DialogTitle>
+            <DialogDescription className="text-right">
+              פרטי פנייה מלאים
+            </DialogDescription>
           </DialogHeader>
+
           {selectedContact && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="font-medium">שם:</div>
-                <div className="col-span-2">{selectedContact.name}</div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="font-medium">אימייל:</div>
-                <div className="col-span-2">{selectedContact.email}</div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="font-medium">טלפון:</div>
-                <div className="col-span-2">{selectedContact.phone}</div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="font-medium">נושא:</div>
-                <div className="col-span-2">{selectedContact.subject || "לא צוין"}</div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="font-medium">תאריך:</div>
-                <div className="col-span-2">
-                  {selectedContact.date ? new Date(selectedContact.date).toLocaleDateString() : "לא זמין"}
+            <div className="space-y-4 text-right">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-medium mb-1">תאריך הפנייה:</h4>
+                  <p>
+                    {selectedContact.date
+                      ? format(new Date(selectedContact.date), "dd/MM/yyyy HH:mm")
+                      : "לא צוין"}
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium mb-1">שם מלא:</h4>
+                  <p>{selectedContact.name}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium mb-1">אימייל:</h4>
+                  <p>{selectedContact.email}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium mb-1">נושא:</h4>
+                  <p>{selectedContact.subject || "פנייה כללית"}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium mb-1">מכשיר:</h4>
+                  <Badge variant="outline">{selectedContact.device || "לא צוין"}</Badge>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="font-medium">מכשיר:</div>
-                <div className="col-span-2">{selectedContact.device || "לא זמין"}</div>
+
+              <div>
+                <h4 className="text-sm font-medium mb-1">הודעה:</h4>
+                <div className="bg-gray-50 p-4 rounded-md border text-right">
+                  <p className="whitespace-pre-wrap">{selectedContact.message}</p>
+                </div>
               </div>
-              <div className="space-y-2">
-                <div className="font-medium">תוכן ההודעה:</div>
-                <div className="border p-2 rounded bg-gray-50">{selectedContact.message}</div>
+
+              <div className="flex justify-end pt-4">
+                <Button onClick={() => setIsViewDialogOpen(false)}>סגור</Button>
               </div>
             </div>
           )}
         </DialogContent>
       </Dialog>
-
-      {/* Delete confirmation */}
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>מחיקת פנייה</DialogTitle>
-            <DialogDescription>
-              האם אתה בטוח שברצונך למחוק את הפנייה? לא ניתן לשחזר פנייה לאחר מחיקתה.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end space-x-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowDeleteDialog(false)}
-            >
-              ביטול
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleDelete(selectedContact?.id)}
-            >
-              מחק
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </AdminLayout>
+    </div>
   );
 };
 

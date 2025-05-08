@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,7 +6,7 @@ import { recordPageView } from "@/services/database";
 const PrivacyPolicy = () => {
   useEffect(() => {
     // Record page view for analytics
-    recordPageView('/privacy');
+    recordPageView();
   }, []);
 
   return (

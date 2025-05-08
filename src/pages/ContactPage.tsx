@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactForm, { ContactFormData } from "@/components/ContactForm";
-import { addContact, getSiteContent, recordPageView } from "@/services/database";
+import { saveContact, getSiteContent, recordPageView } from "@/services/database";
 
 const ContactPage = () => {
   const content = getSiteContent();
 
   useEffect(() => {
     // Record page view for analytics
-    recordPageView('/contact');
+    recordPageView();
   }, []);
 
   const handleSubmit = async (formData: ContactFormData) => {
@@ -21,7 +21,7 @@ const ContactPage = () => {
       : "Desktop";
 
     // Save contact with additional info
-    await addContact({
+    await saveContact({
       ...formData,
       device,
       date: new Date().toISOString(),
