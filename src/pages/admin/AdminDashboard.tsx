@@ -1,12 +1,13 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { getContacts, getPageViews, getGalleryItems } from "@/services/database";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { Contact } from "./AdminContacts";
 
 const AdminDashboard = () => {
-  const contacts = getContacts();
+  const contacts = getContacts() as Contact[];
   const pageViews = getPageViews();
   const galleryItems = getGalleryItems();
   
@@ -20,13 +21,15 @@ const AdminDashboard = () => {
   
   // Calculate device stats
   const deviceStats = pageViews.reduce((acc, view) => {
-    acc[view.device] = (acc[view.device] || 0) + 1;
+    const deviceType = view.device || 'Unknown';
+    acc[deviceType] = (acc[deviceType] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
   
   // Calculate page stats
   const pageStats = pageViews.reduce((acc, view) => {
-    acc[view.path] = (acc[view.path] || 0) + 1;
+    const path = view.path || '/';
+    acc[path] = (acc[path] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
@@ -92,12 +95,12 @@ const AdminDashboard = () => {
                     <div className="flex justify-between">
                       <span className="font-medium">{contact.name}</span>
                       <span className="text-muted-foreground">
-                        {new Date(contact.date || "").toLocaleDateString()}
+                        {contact.date ? new Date(contact.date).toLocaleDateString() : "לא זמין"}
                       </span>
                     </div>
                     <div className="flex justify-between mt-1">
                       <span className="text-muted-foreground">{contact.email}</span>
-                      <span>{contact.subject}</span>
+                      <span>{contact.subject || "לא צוין"}</span>
                     </div>
                   </div>
                 ))}

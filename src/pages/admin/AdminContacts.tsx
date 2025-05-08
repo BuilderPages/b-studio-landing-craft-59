@@ -1,14 +1,22 @@
 
 import React, { useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { getContacts, deleteContact, Contact } from "@/services/database";
+import { getContacts, deleteContact } from "@/services/database";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { ContactFormData } from "@/components/ContactForm";
+
+// Define the Contact type that matches what's in the database
+export interface Contact extends Omit<ContactFormData, 'privacyConsent'> {
+  id: string;
+  date?: string;
+  device?: string;
+}
 
 const AdminContacts = () => {
   const { toast } = useToast();
-  const [contacts, setContacts] = useState(getContacts());
+  const [contacts, setContacts] = useState<Contact[]>(getContacts());
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -85,7 +93,7 @@ const AdminContacts = () => {
                         <div className="text-sm text-gray-500">{contact.phone}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="text-sm text-gray-500">{contact.subject}</div>
+                        <div className="text-sm text-gray-500">{contact.subject || "לא צוין"}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
                         {contact.date ? new Date(contact.date).toLocaleDateString() : "לא זמין"}
@@ -140,7 +148,7 @@ const AdminContacts = () => {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="font-medium">נושא:</div>
-                <div className="col-span-2">{selectedContact.subject}</div>
+                <div className="col-span-2">{selectedContact.subject || "לא צוין"}</div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="font-medium">תאריך:</div>

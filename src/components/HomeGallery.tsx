@@ -4,7 +4,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { GalleryItem } from "@/services/database";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useEmblaCarousel } from "embla-carousel-react";
+import { type UseEmblaCarouselType } from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface HomeGalleryProps {
   items: GalleryItem[];

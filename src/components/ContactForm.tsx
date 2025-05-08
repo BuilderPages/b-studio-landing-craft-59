@@ -18,36 +18,46 @@ const formSchema = z.object({
   email: z.string().email("אנא הכנס כתובת אימייל תקינה"),
   phone: z.string().min(9, "אנא הכנס מספר טלפון תקין").max(15, "מספר הטלפון ארוך מדי"),
   message: z.string().min(5, "ההודעה חייבת להכיל לפחות 5 תווים"),
+  subject: z.string().optional(),
   privacyConsent: z.literal(true, {
     errorMap: () => ({ message: "יש לאשר את מדיניות הפרטיות כדי להמשיך" })
   })
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type ContactFormData = z.infer<typeof formSchema>;
 
-const ContactForm = () => {
+interface ContactFormProps {
+  onSubmit?: (data: ContactFormData) => Promise<void> | void;
+}
+
+const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   
-  const form = useForm<FormValues>({
+  const form = useForm<ContactFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       message: "",
-      privacyConsent: false
+      subject: "",
+      privacyConsent: false as any // Cast to any to bypass TypeScript check temporarily
     }
   });
   
-  const onSubmit = async (data: FormValues) => {
+  const handleSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
     try {
       // Remove consent field before sending
       const { privacyConsent, ...contactData } = data;
       
       // Submit form data
-      addContact(contactData);
+      if (onSubmit) {
+        await onSubmit(data);
+      } else {
+        addContact(contactData);
+      }
       
       // Reset form
       form.reset();
@@ -70,7 +80,7 @@ const ContactForm = () => {
   
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="name"
@@ -123,6 +133,24 @@ const ContactForm = () => {
                   {...field} 
                   className="text-right"
                   aria-required="true"
+                />
+              </FormControl>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="subject"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-right block">נושא</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="נושא ההודעה" 
+                  {...field} 
+                  className="text-right"
                 />
               </FormControl>
               <FormMessage className="text-right" />

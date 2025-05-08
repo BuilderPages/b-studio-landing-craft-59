@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactForm, { ContactFormData } from "@/components/ContactForm";
-import { saveContact, getSiteContent, recordPageView } from "@/services/database";
+import { addContact, getSiteContent, recordPageView } from "@/services/database";
 
 const ContactPage = () => {
   const content = getSiteContent();
@@ -21,10 +21,8 @@ const ContactPage = () => {
       : "Desktop";
 
     // Save contact with additional info
-    await saveContact({
+    await addContact({
       ...formData,
-      id: '', // Will be generated in saveContact
-      ip: "IP tracking requires backend",
       device,
       date: new Date().toISOString(),
     });
