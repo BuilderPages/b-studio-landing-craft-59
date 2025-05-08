@@ -10,7 +10,7 @@ const ContactPage = () => {
 
   useEffect(() => {
     // Record page view for analytics
-    recordPageView();
+    recordPageView('/contact');
   }, []);
 
   const handleSubmit = async (formData: ContactFormData) => {
@@ -23,8 +23,10 @@ const ContactPage = () => {
     // Save contact with additional info
     await saveContact({
       ...formData,
+      id: '', // Will be generated in saveContact
       ip: "IP tracking requires backend",
       device,
+      date: new Date().toISOString(),
     });
   };
 

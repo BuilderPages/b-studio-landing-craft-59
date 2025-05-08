@@ -158,7 +158,7 @@ const AdminAnalytics = () => {
                       {pageViews.slice(0, 10).map((view) => (
                         <tr key={view.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                            {new Date(view.timestamp).toLocaleString()}
+                            {new Date(view.date).toLocaleString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right">
                             <div className="text-sm text-gray-900">
@@ -212,7 +212,7 @@ function processTimeData(pageViews) {
   const dates = {};
   
   pageViews.forEach((view) => {
-    const date = new Date(view.timestamp).toLocaleDateString();
+    const date = new Date(view.date).toLocaleDateString();
     dates[date] = (dates[date] || 0) + 1;
   });
   

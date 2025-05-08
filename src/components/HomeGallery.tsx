@@ -49,7 +49,7 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
           </p>
         </div>
 
-        <Carousel className="max-w-5xl mx-auto mb-10" setActiveIndex={setActiveIndex} activeIndex={activeIndex}>
+        <Carousel className="max-w-5xl mx-auto mb-10">
           <CarouselContent>
             {items.map((item, index) => (
               <CarouselItem key={item.id}>

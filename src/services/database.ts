@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 
 // Sample portfolio items
@@ -14,9 +15,12 @@ export interface Contact {
   id: string;
   name: string;
   email: string;
+  phone: string; // Adding phone field to match ContactFormData
   subject: string;
   message: string;
   date?: string;
+  device?: string;
+  ip?: string;
 }
 
 // Page view type
@@ -24,6 +28,7 @@ export interface PageView {
   id: string;
   path: string;
   date: string;
+  timestamp: string; // Added timestamp field
   device: string;
 }
 
@@ -264,18 +269,28 @@ export const addContact = (contact: Contact) => {
   _contacts.push(contact);
 };
 
+// Alias for addContact to maintain compatibility
+export const saveContact = addContact;
+
 // Function to get all contact form submissions
 export const getContacts = (): Contact[] => {
   return JSON.parse(JSON.stringify(_contacts));
 };
 
+// Function to delete contact
+export const deleteContact = (id: string) => {
+  _contacts = _contacts.filter(contact => contact.id !== id);
+};
+
 // Function to record a page view
 export const recordPageView = (path: string = '/') => {
   const device = getDeviceType();
+  const now = new Date();
   const pageView: PageView = {
     id: uuidv4(),
     path,
-    date: new Date().toISOString(),
+    date: now.toISOString(),
+    timestamp: now.toISOString(),
     device,
   };
   _pageViews.push(pageView);

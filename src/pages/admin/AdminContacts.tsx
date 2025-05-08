@@ -1,16 +1,15 @@
 
 import React, { useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { getContacts, deleteContact } from "@/services/database";
+import { getContacts, deleteContact, Contact } from "@/services/database";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { ContactFormData } from "@/components/ContactForm";
 
 const AdminContacts = () => {
   const { toast } = useToast();
   const [contacts, setContacts] = useState(getContacts());
-  const [selectedContact, setSelectedContact] = useState<ContactFormData | null>(null);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleRefresh = () => {
