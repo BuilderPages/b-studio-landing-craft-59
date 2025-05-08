@@ -4,12 +4,38 @@ import { getContacts, getPageViews, getGalleryItems } from "@/services/database"
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Contact } from "./AdminContacts";
+
+// Define proper TypeScript interfaces for the data
+interface Contact {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  date?: string;
+  subject?: string;
+  device?: string;
+}
+
+interface PageView {
+  id: string;
+  path: string;
+  date: string;
+  timestamp: string;
+  device: string;
+}
+
+interface GalleryItem {
+  id: string;
+  title: string;
+  category: string;
+  imageUrl: string;
+  description: string;
+}
 
 const AdminDashboard = () => {
   const contacts = getContacts() as Contact[];
-  const pageViews = getPageViews();
-  const galleryItems = getGalleryItems();
+  const pageViews = getPageViews() as PageView[];
+  const galleryItems = getGalleryItems() as GalleryItem[];
   
   // Calculate stats
   const totalContacts = contacts.length;
