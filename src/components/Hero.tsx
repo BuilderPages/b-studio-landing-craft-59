@@ -8,6 +8,7 @@ interface HeroProps {
   subtitle: string;
   ctaText: string;
   ctaLink: string;
+  backgroundImage?: string;
 }
 
 const Hero: React.FC<HeroProps> = ({
@@ -15,11 +16,13 @@ const Hero: React.FC<HeroProps> = ({
   subtitle,
   ctaText,
   ctaLink,
+  backgroundImage = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
 }) => {
   return (
     <div className="relative min-h-[90vh] flex items-center overflow-hidden">
       <div className="absolute inset-0 z-0 hero-gradient opacity-90"></div>
-      <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d')] bg-cover bg-center bg-no-repeat opacity-20"></div>
+      <div className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20"
+           style={{ backgroundImage: `url('${backgroundImage}')` }}></div>
 
       <div className="container max-w-7xl mx-auto px-4 z-10">
         <div className="flex flex-col items-end text-right max-w-3xl ml-auto">

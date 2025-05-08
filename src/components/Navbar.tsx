@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { cn } from "@/lib/utils";
+import { getNavigation } from "@/services/database";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigation = getNavigation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,11 +37,14 @@ const Navbar = () => {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <NavLink to="/" label="דף בית" />
-            <NavLink to="/#services" label="שירותים" />
-            <NavLink to="/gallery" label="גלריה" />
-            <NavLink to="/contact" label="צור קשר" />
-            <NavLink to="/admin" label="ניהול" className="text-bstudio-primary" />
+            {navigation.items.map((item) => (
+              <NavLink 
+                key={item.id}
+                to={item.url} 
+                label={item.label} 
+                className={item.highlight ? "text-bstudio-primary" : ""} 
+              />
+            ))}
           </nav>
           
           {/* Mobile menu button */}
@@ -76,11 +81,15 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 space-y-2 flex flex-col items-end bg-white/90 backdrop-blur-md">
-            <NavLink to="/" label="דף בית" onClick={() => setMobileMenuOpen(false)} />
-            <NavLink to="/#services" label="שירותים" onClick={() => setMobileMenuOpen(false)} />
-            <NavLink to="/gallery" label="גלריה" onClick={() => setMobileMenuOpen(false)} />
-            <NavLink to="/contact" label="צור קשר" onClick={() => setMobileMenuOpen(false)} />
-            <NavLink to="/admin" label="ניהול" className="text-bstudio-primary" onClick={() => setMobileMenuOpen(false)} />
+            {navigation.items.map((item) => (
+              <NavLink 
+                key={item.id}
+                to={item.url} 
+                label={item.label} 
+                onClick={() => setMobileMenuOpen(false)} 
+                className={item.highlight ? "text-bstudio-primary" : ""} 
+              />
+            ))}
           </div>
         )}
       </div>

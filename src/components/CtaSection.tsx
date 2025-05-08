@@ -3,21 +3,35 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-const CtaSection: React.FC = () => {
+interface CtaSectionProps {
+  title: string;
+  description: string;
+  ctaText: string;
+  ctaLink: string;
+  videoUrl: string;
+}
+
+const CtaSection: React.FC<CtaSectionProps> = ({ 
+  title, 
+  description, 
+  ctaText, 
+  ctaLink,
+  videoUrl
+}) => {
   return (
     <section className="section-spacing hero-gradient text-white">
       <div className="container max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 text-right">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              מוכנים לקחת את העסק שלכם לשלב הבא?
+              {title}
             </h2>
             <p className="text-white/90 mb-8 text-lg">
-              צרו איתנו קשר היום לקבלת ייעוץ ראשוני ללא עלות ותגלו איך אנחנו יכולים לעזור לעסק שלכם לבלוט בשוק התחרותי.
+              {description}
             </p>
-            <Link to="/contact">
+            <Link to={ctaLink}>
               <Button size="lg" className="bg-white text-bstudio-primary hover:bg-white/90">
-                צרו קשר עכשיו
+                {ctaText}
               </Button>
             </Link>
           </div>
@@ -27,7 +41,7 @@ const CtaSection: React.FC = () => {
               <div className="aspect-video bg-white/10 backdrop-blur rounded-lg overflow-hidden shadow-xl">
                 <iframe
                   className="w-full h-full"
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  src={videoUrl}
                   title="B Studio Showreel"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
