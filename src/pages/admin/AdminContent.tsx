@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { getSiteContent, saveSiteContent, getNavigation, updateNavigation, getFooterContent, updateFooterContent } from "@/services/database";
 import { replaceYearPlaceholder } from "@/utils/contentUtils";
 import { v4 as uuidv4 } from 'uuid';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import ImageUpload from "@/components/admin/ImageUpload";
+import { SketchPicker } from 'react-color';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 // Define types for site content and navigation
 interface AdminSiteContent {
@@ -34,6 +40,12 @@ interface AdminSiteContent {
     whatsapp?: string;
   };
   footerText: string;
+  logoUrl?: string;
+  servicesTitle?: string;
+  servicesDescription?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
   [key: string]: any;
 }
 
@@ -82,6 +94,7 @@ const AdminContent = () => {
   const [navigation, setNavigation] = useState<Navigation>({ items: [] });
   const [footerContent, setFooterContent] = useState<FooterContent>({} as FooterContent);
   const [activeTab, setActiveTab] = useState("main");
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   useEffect(() => {
     // Load content and navigation on component mount
@@ -114,6 +127,12 @@ const AdminContent = () => {
         whatsapp: siteContent.contactInfo?.whatsapp || '',
       },
       footerText: siteContent.footerText || '',
+      logoUrl: siteContent.logoUrl || '',
+      servicesTitle: siteContent.servicesTitle || 'השירותים שלנו',
+      servicesDescription: siteContent.servicesDescription || 'אנחנו מציעים מגוון רחב של שירותים',
+      primaryColor: siteContent.primaryColor || '#9b87f5',
+      secondaryColor: siteContent.secondaryColor || '#7E69AB',
+      accentColor: siteContent.accentColor || '#6E59A5',
     };
     
     setContent(adminContent);
@@ -214,6 +233,10 @@ const AdminContent = () => {
     setFooterContent({ ...footerContent, socialLinks: updatedLinks });
   };
 
+  const handleImageUpload = (imageUrl: string, field: string) => {
+    handleContentChange(field, imageUrl);
+  };
+
   const saveChanges = (type: 'content' | 'navigation' | 'footer') => {
     try {
       if (type === 'content') {
@@ -258,90 +281,66 @@ const AdminContent = () => {
           <h1 className="text-2xl md:text-3xl font-bold">ניהול תוכן</h1>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar Navigation */}
-          <Card className="lg:col-span-1">
-            <CardContent className="p-4">
-              <div className="space-y-2">
-                <Button 
-                  variant={activeTab === "main" ? "default" : "outline"} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab("main")}
-                >
-                  עמוד ראשי
-                </Button>
-                <Button 
-                  variant={activeTab === "about" ? "default" : "outline"} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab("about")}
-                >
-                  אודות
-                </Button>
-                <Button 
-                  variant={activeTab === "contact" ? "default" : "outline"} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab("contact")}
-                >
-                  פרטי קשר
-                </Button>
-                <Button 
-                  variant={activeTab === "gallery" ? "default" : "outline"} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab("gallery")}
-                >
-                  גלריה
-                </Button>
-                <Button 
-                  variant={activeTab === "footer" ? "default" : "outline"} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab("footer")}
-                >
-                  פוטר
-                </Button>
-                <Button 
-                  variant={activeTab === "navigation" ? "default" : "outline"} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab("navigation")}
-                >
-                  תפריט ניווט
-                </Button>
-                <Button 
-                  variant={activeTab === "footer_content" ? "default" : "outline"} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab("footer_content")}
-                >
-                  עיצוב פוטר מורחב
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Content Editor */}
-          <Card className="lg:col-span-3">
+        <Tabs defaultValue="main" onValueChange={setActiveTab} value={activeTab} className="w-full">
+          <TabsList className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 mb-6">
+            <TabsTrigger value="main">עמוד ראשי</TabsTrigger>
+            <TabsTrigger value="about">אודות</TabsTrigger>
+            <TabsTrigger value="services">שירותים</TabsTrigger>
+            <TabsTrigger value="contact">פרטי קשר</TabsTrigger>
+            <TabsTrigger value="gallery">גלריה</TabsTrigger>
+            <TabsTrigger value="navigation">תפריט ניווט</TabsTrigger>
+            <TabsTrigger value="footer">פוטר</TabsTrigger>
+            <TabsTrigger value="branding">מיתוג וצבעים</TabsTrigger>
+          </TabsList>
+          
+          <Card>
             <CardHeader>
               <CardTitle>
                 {activeTab === "main" && "עריכת עמוד ראשי"}
                 {activeTab === "about" && "עריכת אודות"}
+                {activeTab === "services" && "עריכת שירותים"}
                 {activeTab === "contact" && "עריכת פרטי קשר"}
                 {activeTab === "gallery" && "עריכת גלריה"}
-                {activeTab === "footer" && "עריכת פוטר"}
                 {activeTab === "navigation" && "עריכת תפריט ניווט"}
-                {activeTab === "footer_content" && "עיצוב פוטר מורחב"}
+                {activeTab === "footer" && "עריכת פוטר"}
+                {activeTab === "branding" && "מיתוג וצבעים"}
               </CardTitle>
               <CardDescription>
                 כאן תוכל לערוך את תוכן האתר. השינויים יופיעו באתר מיד לאחר שמירה.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+
               {/* Main Page Content */}
               {activeTab === "main" && (
-                <>
+                <div className="space-y-6">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">כותרת ראשית</h3>
+                    <h3 className="text-lg font-medium">לוגו</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <ImageUpload 
+                          onImageSelected={(url) => handleImageUpload(url, 'logoUrl')}
+                          currentImageUrl={content.logoUrl || ""}
+                          label="העלאת לוגו"
+                        />
+                      </div>
+                      <div>
+                        {content.logoUrl && (
+                          <div className="bg-gray-50 p-4 rounded-md flex items-center justify-center">
+                            <img src={content.logoUrl} alt="לוגו האתר" className="max-h-20" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4 pt-6 border-t">
+                    <h3 className="text-lg font-medium">באנר ראשי</h3>
                     <Input 
                       value={content.heroTitle || ""} 
                       onChange={(e) => handleContentChange('heroTitle', e.target.value)} 
                       className="text-right"
+                      placeholder="כותרת ראשית"
                     />
                     
                     <h3 className="text-lg font-medium">תת כותרת</h3>
@@ -349,6 +348,7 @@ const AdminContent = () => {
                       value={content.heroSubtitle || ""} 
                       onChange={(e) => handleContentChange('heroSubtitle', e.target.value)} 
                       className="text-right min-h-24"
+                      placeholder="תת כותרת"
                     />
 
                     <div className="grid grid-cols-2 gap-4">
@@ -358,6 +358,7 @@ const AdminContent = () => {
                           value={content.heroCtaText || ""} 
                           onChange={(e) => handleContentChange('heroCtaText', e.target.value)} 
                           className="text-right"
+                          placeholder="טקסט כפתור"
                         />
                       </div>
                       <div>
@@ -366,26 +367,28 @@ const AdminContent = () => {
                           value={content.heroCtaLink || ""} 
                           onChange={(e) => handleContentChange('heroCtaLink', e.target.value)} 
                           className="text-right"
+                          placeholder="/contact"
                         />
                       </div>
                     </div>
                     
-                    <h3 className="text-lg font-medium">תמונת רקע (URL)</h3>
-                    <Input 
-                      value={content.heroBackgroundImage || ""} 
-                      onChange={(e) => handleContentChange('heroBackgroundImage', e.target.value)} 
-                      className="text-right"
+                    <h3 className="text-lg font-medium">תמונת רקע</h3>
+                    <ImageUpload 
+                      onImageSelected={(url) => handleImageUpload(url, 'heroBackgroundImage')}
+                      currentImageUrl={content.heroBackgroundImage || ""}
+                      label="העלאת תמונת רקע"
                     />
                   </div>
                   
-                  <div className="pt-4 border-t">
-                    <h3 className="text-lg font-medium mb-4">אזור קריאה לפעולה (CTA)</h3>
+                  <div className="pt-6 border-t">
+                    <h3 className="text-lg font-medium mb-4">אזור וידאו קריאה לפעולה (CTA)</h3>
                     <div className="space-y-4">
                       <h3 className="text-lg font-medium">כותרת CTA</h3>
                       <Input 
                         value={content.ctaTitle || ""} 
                         onChange={(e) => handleContentChange('ctaTitle', e.target.value)} 
                         className="text-right"
+                        placeholder="כותרת אזור CTA"
                       />
                       
                       <h3 className="text-lg font-medium">טקסט CTA</h3>
@@ -393,6 +396,7 @@ const AdminContent = () => {
                         value={content.ctaDescription || ""} 
                         onChange={(e) => handleContentChange('ctaDescription', e.target.value)} 
                         className="text-right min-h-24"
+                        placeholder="תיאור אזור CTA"
                       />
                       
                       <div className="grid grid-cols-2 gap-4">
@@ -402,6 +406,7 @@ const AdminContent = () => {
                             value={content.ctaButtonText || ""} 
                             onChange={(e) => handleContentChange('ctaButtonText', e.target.value)} 
                             className="text-right"
+                            placeholder="טקסט כפתור"
                           />
                         </div>
                         <div>
@@ -410,6 +415,7 @@ const AdminContent = () => {
                             value={content.ctaButtonLink || ""} 
                             onChange={(e) => handleContentChange('ctaButtonLink', e.target.value)} 
                             className="text-right"
+                            placeholder="/contact"
                           />
                         </div>
                       </div>
@@ -419,10 +425,11 @@ const AdminContent = () => {
                         value={content.videoUrl || ""} 
                         onChange={(e) => handleContentChange('videoUrl', e.target.value)} 
                         className="text-right"
+                        placeholder="https://www.youtube.com/embed/..."
                       />
                     </div>
                   </div>
-                </>
+                </div>
               )}
 
               {/* About Content */}
@@ -439,6 +446,25 @@ const AdminContent = () => {
                   <Textarea 
                     value={content.aboutText || ""} 
                     onChange={(e) => handleContentChange('aboutText', e.target.value)} 
+                    className="text-right min-h-40"
+                  />
+                </div>
+              )}
+
+              {/* Services Content */}
+              {activeTab === "services" && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">כותרת השירותים</h3>
+                  <Input 
+                    value={content.servicesTitle || ""} 
+                    onChange={(e) => handleContentChange('servicesTitle', e.target.value)} 
+                    className="text-right"
+                  />
+                  
+                  <h3 className="text-lg font-medium">תיאור השירותים</h3>
+                  <Textarea 
+                    value={content.servicesDescription || ""} 
+                    onChange={(e) => handleContentChange('servicesDescription', e.target.value)} 
                     className="text-right min-h-40"
                   />
                 </div>
@@ -516,90 +542,90 @@ const AdminContent = () => {
                 </div>
               )}
 
-              {/* Footer Content */}
-              {activeTab === "footer" && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">טקסט פוטר (כולל {'{year}'} עבור השנה הנוכחית)</h3>
-                  <Input 
-                    value={content.footerText || ""} 
-                    onChange={(e) => handleContentChange('footerText', e.target.value)} 
-                    className="text-right"
-                  />
-                  
-                  <div className="bg-muted p-3 rounded-md">
-                    <h4 className="font-medium mb-1">תצוגה מקדימה:</h4>
-                    <p>{renderFooterPreview()}</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Navigation Editor */}
-              {activeTab === "navigation" && (
+              {/* Branding & Colors */}
+              {activeTab === "branding" && (
                 <div className="space-y-6">
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-medium">פריטי תפריט</h3>
-                      <Button size="sm" onClick={addNavItem}>הוסף פריט</Button>
-                    </div>
-                    
-                    {navigation.items?.map((item, index) => (
-                      <div key={item.id} className="border p-3 rounded space-y-3">
-                        <div className="flex justify-between items-center">
-                          <h4 className="font-medium">פריט #{index + 1}</h4>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="text-red-500 hover:text-red-700"
-                            onClick={() => removeNavItem(index)}
-                          >
-                            מחק
-                          </Button>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <h5 className="text-sm font-medium mb-1">טקסט</h5>
-                            <Input 
-                              value={item.label} 
-                              onChange={(e) => handleNavItemChange(index, 'label', e.target.value)} 
-                              className="text-right"
+                    <h3 className="text-lg font-medium">צבעים ראשיים</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">צבע ראשי</label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between">
+                              <span>בחירת צבע</span>
+                              <div 
+                                className="h-4 w-4 rounded-full" 
+                                style={{ backgroundColor: content.primaryColor || '#9b87f5' }}
+                              />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0">
+                            <SketchPicker 
+                              color={content.primaryColor || '#9b87f5'}
+                              onChange={(color) => handleContentChange('primaryColor', color.hex)}
                             />
-                          </div>
-                          <div>
-                            <h5 className="text-sm font-medium mb-1">לינק</h5>
-                            <Input 
-                              value={item.url} 
-                              onChange={(e) => handleNavItemChange(index, 'url', e.target.value)} 
-                              className="text-right"
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            id={`highlight-${item.id}`}
-                            checked={!!item.highlight}
-                            onChange={(e) => handleNavItemChange(index, 'highlight', e.target.checked)}
-                            className="ml-2"
-                          />
-                          <label htmlFor={`highlight-${item.id}`}>הדגש (צבע מיוחד)</label>
-                        </div>
+                          </PopoverContent>
+                        </Popover>
                       </div>
-                    ))}
+
+                      <div>
+                        <label className="block text-sm font-medium mb-1">צבע משני</label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between">
+                              <span>בחירת צבע</span>
+                              <div 
+                                className="h-4 w-4 rounded-full" 
+                                style={{ backgroundColor: content.secondaryColor || '#7E69AB' }}
+                              />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0">
+                            <SketchPicker 
+                              color={content.secondaryColor || '#7E69AB'}
+                              onChange={(color) => handleContentChange('secondaryColor', color.hex)}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium mb-1">צבע דגש</label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between">
+                              <span>בחירת צבע</span>
+                              <div 
+                                className="h-4 w-4 rounded-full" 
+                                style={{ backgroundColor: content.accentColor || '#6E59A5' }}
+                              />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0">
+                            <SketchPicker 
+                              color={content.accentColor || '#6E59A5'}
+                              onChange={(color) => handleContentChange('accentColor', color.hex)}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Footer Extended Content Editor */}
-              {activeTab === "footer_content" && (
+              {/* Footer Content */}
+              {activeTab === "footer" && (
                 <div className="space-y-6">
-                  <h3 className="text-lg font-medium">תיאור כללי פוטר</h3>
-                  <Textarea
-                    value={footerContent.description || ""}
-                    onChange={(e) => handleFooterChange('description', e.target.value)}
-                    className="text-right min-h-20"
-                  />
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">תיאור כללי פוטר</h3>
+                    <Textarea
+                      value={footerContent.description || ""}
+                      onChange={(e) => handleFooterChange('description', e.target.value)}
+                      className="text-right min-h-20"
+                    />
+                  </div>
                   
                   <div className="border-t pt-4">
                     <div className="flex justify-between items-center mb-4">
@@ -749,12 +775,70 @@ const AdminContent = () => {
                   </div>
                 </div>
               )}
+
+              {/* Navigation Editor */}
+              {activeTab === "navigation" && (
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-medium">פריטי תפריט</h3>
+                      <Button size="sm" onClick={addNavItem}>הוסף פריט</Button>
+                    </div>
+                    
+                    {navigation.items?.map((item, index) => (
+                      <div key={item.id} className="border p-3 rounded space-y-3">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-medium">פריט #{index + 1}</h4>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() => removeNavItem(index)}
+                          >
+                            מחק
+                          </Button>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <h5 className="text-sm font-medium mb-1">טקסט</h5>
+                            <Input 
+                              value={item.label} 
+                              onChange={(e) => handleNavItemChange(index, 'label', e.target.value)} 
+                              className="text-right"
+                            />
+                          </div>
+                          <div>
+                            <h5 className="text-sm font-medium mb-1">לינק</h5>
+                            <Input 
+                              value={item.url} 
+                              onChange={(e) => handleNavItemChange(index, 'url', e.target.value)} 
+                              className="text-right"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id={`highlight-${item.id}`}
+                            checked={!!item.highlight}
+                            onChange={(e) => handleNavItemChange(index, 'highlight', e.target.checked)}
+                            className="ml-2"
+                          />
+                          <label htmlFor={`highlight-${item.id}`}>הדגש (צבע מיוחד)</label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <div className="pt-6 flex justify-end">
                 <Button onClick={() => {
                   if (activeTab === "navigation") {
                     saveChanges("navigation");
-                  } else if (activeTab === "footer_content") {
+                  } else if (activeTab === "footer") {
                     saveChanges("footer");
                   } else {
                     saveChanges("content");
@@ -765,7 +849,7 @@ const AdminContent = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </Tabs>
       </div>
     </AdminLayout>
   );

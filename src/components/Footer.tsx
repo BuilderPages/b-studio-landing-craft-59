@@ -21,8 +21,8 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="text-right">
-            <h3 className="font-bold text-gray-800 mb-4">{footerContent.quickLinksTitle}</h3>
+          <div>
+            <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.quickLinksTitle}</h3>
             <div className="space-y-2 flex flex-col items-end">
               {footerContent.quickLinks?.map((link, index) => (
                 <Link 
@@ -36,8 +36,8 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="text-right">
-            <h3 className="font-bold text-gray-800 mb-4">{footerContent.servicesTitle}</h3>
+          <div>
+            <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.servicesTitle}</h3>
             <div className="space-y-2 flex flex-col items-end">
               {footerContent.serviceLinks?.map((link, index) => (
                 <Link 
@@ -51,8 +51,8 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="text-right">
-            <h3 className="font-bold text-gray-800 mb-4">{footerContent.contactTitle}</h3>
+          <div>
+            <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.contactTitle}</h3>
             <div className="space-y-2 flex flex-col items-end">
               <p className="text-gray-600">{footerContent.contactInfo?.phone}</p>
               <p className="text-gray-600">{footerContent.contactInfo?.email}</p>
@@ -72,7 +72,7 @@ const Footer = () => {
             </Link>
           </div>
           
-          <p className="text-gray-500">{(footerContent.copyrightText || siteContent.footerText || "© {year} B Studio. כל הזכויות שמורות.").replace('{year}', year)}</p>
+          <p className="text-gray-500 text-center">{(footerContent.copyrightText || siteContent.footerText || "© {year} B Studio. כל הזכויות שמורות.").replace('{year}', year)}</p>
           
           <div className="mt-4 md:mt-0 flex justify-center space-x-4">
             {footerContent.socialLinks?.map((social, index) => (

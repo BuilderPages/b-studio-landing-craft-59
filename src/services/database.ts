@@ -7,6 +7,8 @@ export interface Contact {
   date?: string;
   subject?: string;
   device?: string;
+  browser?: string;
+  ip?: string;
   privacyConsent?: boolean;
 }
 
@@ -16,6 +18,8 @@ export interface PageView {
   date: string;
   timestamp: string;
   device: string;
+  browser?: string;
+  ip?: string;
 }
 
 export interface SiteContent {
@@ -49,6 +53,12 @@ export interface SiteContent {
   aboutTitle: string;
   aboutText: string;
   footerText: string;
+  logoUrl?: string;
+  servicesTitle?: string;
+  servicesDescription?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
 }
 
 export interface FooterContent {
@@ -85,6 +95,28 @@ export interface GalleryItem {
   imageUrl: string;
   description: string;
   order?: number;
+}
+
+// Helper function to get browser information
+function getBrowserInfo() {
+  const userAgent = navigator.userAgent;
+  let browserName = "Unknown";
+  
+  if (userAgent.match(/chrome|chromium|crios/i)) {
+    browserName = "Chrome";
+  } else if (userAgent.match(/firefox|fxios/i)) {
+    browserName = "Firefox";
+  } else if (userAgent.match(/safari/i)) {
+    browserName = "Safari";
+  } else if (userAgent.match(/opr\//i)) {
+    browserName = "Opera";
+  } else if (userAgent.match(/edg/i)) {
+    browserName = "Edge";
+  } else if (userAgent.match(/msie|trident/i)) {
+    browserName = "Internet Explorer";
+  }
+  
+  return browserName;
 }
 
 // Initial data setup (if localStorage is empty)
@@ -186,6 +218,12 @@ if (!localStorage.getItem('siteContent')) {
     aboutTitle: 'קצת עלינו',
     aboutText: 'אנחנו סטודיו בוטיק המתמחה במיתוג, עיצוב גרפי ובניית אתרים.',
     footerText: '© {year} B Studio. כל הזכויות שמורות.',
+    logoUrl: '',
+    servicesTitle: 'השירותים שלנו',
+    servicesDescription: 'אנו מציעים מגוון שירותים מקצועיים בתחומי העיצוב והדיגיטל',
+    primaryColor: '#9b87f5',
+    secondaryColor: '#7E69AB',
+    accentColor: '#6E59A5',
   };
   localStorage.setItem('siteContent', JSON.stringify(defaultContent));
 }
@@ -198,11 +236,15 @@ export function getContacts(): Contact[] {
 
 export function saveContact(contact: Omit<Contact, "id">): Contact {
   const contacts = getContacts();
+  const browserInfo = getBrowserInfo();
+  
   const newContact = {
     id: crypto.randomUUID(),
     ...contact,
     date: new Date().toISOString(),
+    browser: browserInfo,
   };
+  
   contacts.push(newContact);
   localStorage.setItem('contacts', JSON.stringify(contacts));
   return newContact;
@@ -220,8 +262,14 @@ export function getPageViews(): PageView[] {
   return pageViews ? JSON.parse(pageViews) : [];
 }
 
+// Record page views with browser and IP info
 export function recordPageView(path: string = window.location.pathname): void {
   const pageViews = getPageViews();
+  const browserInfo = getBrowserInfo();
+  
+  // Mock IP for demo purposes - in a real app you'd use a service to get the IP
+  const mockIP = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+  
   const newPageView: PageView = {
     id: crypto.randomUUID(),
     path: path,
@@ -230,6 +278,8 @@ export function recordPageView(path: string = window.location.pathname): void {
     device: /Mobile|iPhone|Android|IEMobile|BlackBerry|Opera Mini/.test(navigator.userAgent)
       ? "Mobile"
       : "Desktop",
+    browser: browserInfo,
+    ip: mockIP,
   };
   pageViews.push(newPageView);
   localStorage.setItem('pageViews', JSON.stringify(pageViews));
@@ -269,6 +319,12 @@ export function getSiteContent(): SiteContent {
     aboutTitle: 'קצת עלינו',
     aboutText: 'אנחנו סטודיו בוטיק המתמחה במיתוג, עיצוב גרפי ובניית אתרים.',
     footerText: '© {year} B Studio. כל הזכויות שמורות.',
+    logoUrl: '',
+    servicesTitle: 'השירותים שלנו',
+    servicesDescription: 'אנו מציעים מגוון שירותים מקצועיים',
+    primaryColor: '#9b87f5',
+    secondaryColor: '#7E69AB',
+    accentColor: '#6E59A5',
   };
 }
 
