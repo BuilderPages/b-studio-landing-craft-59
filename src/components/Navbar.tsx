@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
-import { getSiteContent } from "@/services/database";
+import { getSiteContent, getNavigation } from "@/services/database";
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
 
@@ -19,7 +19,8 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const siteContent = getSiteContent();
-  const navItems = siteContent.navigation?.items || defaultNavItems;
+  const navigation = getNavigation();
+  const navItems = navigation.items || defaultNavItems;
 
   useEffect(() => {
     const handleScroll = () => {
