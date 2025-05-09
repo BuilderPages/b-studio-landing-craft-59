@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +17,7 @@ import AdminGallery from "./pages/admin/AdminGallery";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminHomeGallery from "./pages/admin/AdminHomeGallery";
+import AdminBackups from "./pages/admin/AdminBackups";
 import AccessibilityWidget from "./components/AccessibilityWidget";
 
 const queryClient = new QueryClient();
@@ -51,6 +53,7 @@ const App = () => {
             <Route path="/admin/content" element={<AdminContent />} />
             <Route path="/admin/analytics" element={<AdminAnalytics />} />
             <Route path="/admin/home-gallery" element={<AdminHomeGallery />} />
+            <Route path="/admin/backups" element={<AdminBackups />} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

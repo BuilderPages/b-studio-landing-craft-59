@@ -8,15 +8,18 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { Search } from "lucide-react";
+import { Search, Download } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminBackNavigation from "@/components/admin/AdminBackNavigation";
+import * as XLSX from 'xlsx';
+import { useToast } from "@/hooks/use-toast";
 
 const AdminContacts = () => {
   const [contacts, setContacts] = useState<Contact[]>(getContacts());
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const handleDelete = (id: string) => {
     const updatedContacts = contacts.filter(contact => contact.id !== id);
@@ -35,12 +38,51 @@ const AdminContacts = () => {
     );
   });
 
+  const exportToExcel = () => {
+    // Prepare data for Excel
+    const exportData = filteredContacts.map(contact => ({
+      'שם': contact.name,
+      'אימייל': contact.email,
+      'נושא': contact.subject || 'פנייה כללית',
+      'תאריך': contact.date ? format(new Date(contact.date), "dd/MM/yyyy HH:mm") : 'לא צוין',
+      'הודעה': contact.message,
+      'מכשיר': contact.device || 'לא צוין'
+    }));
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(exportData, { header: ['שם', 'אימייל', 'נושא', 'תאריך', 'הודעה', 'מכשיר'] });
+    
+    // RTL support
+    worksheet['!RTL'] = true;
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "פניות");
+
+    // Generate Excel file
+    XLSX.writeFile(workbook, "פניות_שהתקבלו.xlsx");
+    
+    toast({
+      title: "הייצוא הצליח",
+      description: "קובץ האקסל נשמר בהצלחה",
+    });
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
         <AdminBackNavigation title="ניהול פניות" />
         
         <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={exportToExcel}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              ייצוא לאקסל
+            </Button>
+          </div>
           <div className="relative w-64">
             <Input
               type="text"
