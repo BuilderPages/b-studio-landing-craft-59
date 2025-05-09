@@ -9,11 +9,13 @@ import { useToast } from "@/components/ui/use-toast";
 interface ImageUploadProps {
   onImageSelected: (imageUrl: string) => void;
   currentImage?: string;
+  label?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageSelected,
   currentImage,
+  label,
 }) => {
   const { toast } = useToast();
   const [urlInput, setUrlInput] = useState("");
@@ -94,6 +96,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   return (
     <div className="w-full space-y-4">
+      {label && <p className="text-sm text-right font-medium mb-1">{label}</p>}
+      
       {currentImage && (
         <div className="mb-4 p-2 border rounded-md">
           <p className="text-sm text-muted-foreground mb-2">תמונה נוכחית:</p>

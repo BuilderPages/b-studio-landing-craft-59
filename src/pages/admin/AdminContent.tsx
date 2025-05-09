@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -320,7 +319,7 @@ const AdminContent = () => {
                       <div>
                         <ImageUpload 
                           onImageSelected={(url) => handleImageUpload(url, 'logoUrl')}
-                          currentImageUrl={content.logoUrl || ""}
+                          currentImage={content.logoUrl || ""}
                           label="העלאת לוגו"
                         />
                       </div>
@@ -375,7 +374,7 @@ const AdminContent = () => {
                     <h3 className="text-lg font-medium">תמונת רקע</h3>
                     <ImageUpload 
                       onImageSelected={(url) => handleImageUpload(url, 'heroBackgroundImage')}
-                      currentImageUrl={content.heroBackgroundImage || ""}
+                      currentImage={content.heroBackgroundImage || ""}
                       label="העלאת תמונת רקע"
                     />
                   </div>
