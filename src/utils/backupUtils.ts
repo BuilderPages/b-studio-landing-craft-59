@@ -9,73 +9,80 @@ import { getContacts } from "@/services/database";
 
 export interface BackupMetadata {
   id: string;
-  date: string;
+  date: Date; // Changed from string to Date type
   size: string;
   type: "auto" | "manual";
   status: "completed" | "failed" | "in-progress";
 }
 
-// Simulated backup data
+// Helper function to create Date objects safely
+const createSafeDate = (dateStr: string): Date => {
+  // Make sure we have a valid date
+  const date = new Date(dateStr);
+  return isNaN(date.getTime()) ? new Date() : date;
+};
+
+// Simulated backup data with proper Date objects
 const mockBackups: BackupMetadata[] = [
   {
     id: "backup-20250501",
-    date: "2025-05-01 00:00:00",
+    date: createSafeDate("2025-05-01 00:00:00"),
     size: "1.2 MB",
     type: "auto",
     status: "completed"
   },
   {
     id: "backup-20250502",
-    date: "2025-05-02 00:00:00",
+    date: createSafeDate("2025-05-02 00:00:00"),
     size: "1.3 MB",
     type: "auto",
     status: "completed"
   },
   {
     id: "backup-20250503",
-    date: "2025-05-03 00:00:00",
+    date: createSafeDate("2025-05-03 00:00:00"),
     size: "1.2 MB",
     type: "auto",
     status: "completed"
   },
   {
     id: "backup-20250504-manual",
-    date: "2025-05-04 15:30:00",
+    date: createSafeDate("2025-05-04 15:30:00"),
     size: "1.3 MB",
     type: "manual",
     status: "completed"
   },
   {
     id: "backup-20250505",
-    date: "2025-05-05 00:00:00",
+    date: createSafeDate("2025-05-05 00:00:00"),
     size: "1.3 MB", 
     type: "auto",
     status: "completed"
   },
   {
     id: "backup-20250506",
-    date: "2025-05-06 00:00:00",
+    date: createSafeDate("2025-05-06 00:00:00"),
     size: "1.4 MB",
     type: "auto",
     status: "completed"
   },
   {
     id: "backup-20250507",
-    date: "2025-05-07 00:00:00",
+    date: createSafeDate("2025-05-07 00:00:00"),
     size: "1.4 MB",
     type: "auto",
     status: "completed"
   },
   {
     id: "backup-20250508",
-    date: "2025-05-08 00:00:00", 
+    date: createSafeDate("2025-05-08 00:00:00"), 
     size: "1.4 MB",
     type: "auto",
     status: "completed"
   },
   {
     id: "backup-20250509",
-    date: "2025-05-09 00:00:00",
+    date: createSafeDate("2025-05-09 00:00:00"),
     size: "1.4 MB",
     type: "auto",
     status: "in-progress"
@@ -94,7 +101,7 @@ export const createBackup = (): Promise<BackupMetadata> => {
     setTimeout(() => {
       const newBackup: BackupMetadata = {
         id: `backup-manual-${Date.now()}`,
-        date: new Date().toISOString(),
+        date: new Date(),
         size: "1.4 MB",
         type: "manual",
         status: "completed"
@@ -137,7 +144,7 @@ export const restoreBackup = (backupId: string): Promise<boolean> => {
 };
 
 // Simulate checking backup status (for automated backups)
-export const getBackupStatus = (): { lastBackup: string | null; nextBackup: string } => {
+export const getBackupStatus = (): { lastBackup: Date | null; nextBackup: Date } => {
   // In a real application, this would query the server for actual backup status
   const completedBackups = mockBackups.filter(b => b.status === "completed");
   const lastBackup = completedBackups.length > 0 ? 
@@ -151,6 +158,6 @@ export const getBackupStatus = (): { lastBackup: string | null; nextBackup: stri
   
   return {
     lastBackup,
-    nextBackup: tomorrow.toISOString()
+    nextBackup: tomorrow
   };
 };

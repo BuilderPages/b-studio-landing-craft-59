@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
   getBackupStatus,
   BackupMetadata
 } from "@/utils/backupUtils";
+import { formatDateSafe } from "@/utils/dateUtils";
 import {
   Dialog,
   DialogContent,
@@ -31,9 +32,9 @@ const AdminBackups = () => {
   const [selectedBackup, setSelectedBackup] = useState<string | null>(null);
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState<boolean>(false);
   const [isRestoring, setIsRestoring] = useState<boolean>(false);
-  const [backupStatus, setBackupStatus] = useState<{ lastBackup: string | null; nextBackup: string }>({
+  const [backupStatus, setBackupStatus] = useState<{ lastBackup: Date | null; nextBackup: Date }>({
     lastBackup: null,
-    nextBackup: ""
+    nextBackup: new Date()
   });
   
   const { toast } = useToast();
@@ -147,7 +148,7 @@ const AdminBackups = () => {
                   <p className="text-sm font-medium">גיבוי אחרון:</p>
                   <p>
                     {backupStatus.lastBackup 
-                      ? format(parseISO(backupStatus.lastBackup), "dd/MM/yyyy HH:mm:ss") 
+                      ? formatDateSafe(backupStatus.lastBackup, "dd/MM/yyyy HH:mm:ss") 
                       : "לא בוצע גיבוי עדיין"}
                   </p>
                 </div>
@@ -157,7 +158,7 @@ const AdminBackups = () => {
                 <Clock className="h-5 w-5 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium">גיבוי הבא מתוכנן:</p>
-                  <p>{format(parseISO(backupStatus.nextBackup), "dd/MM/yyyy HH:mm:ss")}</p>
+                  <p>{formatDateSafe(backupStatus.nextBackup, "dd/MM/yyyy HH:mm:ss")}</p>
                 </div>
               </div>
               
@@ -276,7 +277,7 @@ const AdminBackups = () => {
                     </TableCell>
                     <TableCell>{backup.size}</TableCell>
                     <TableCell>
-                      {format(parseISO(backup.date), "dd/MM/yyyy HH:mm:ss")}
+                      {formatDateSafe(backup.date, "dd/MM/yyyy HH:mm:ss")}
                     </TableCell>
                     <TableCell>{backup.id}</TableCell>
                   </TableRow>
