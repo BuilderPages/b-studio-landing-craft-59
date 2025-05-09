@@ -18,3 +18,19 @@ export const formatDateSafe = (date: Date | null | undefined, formatString: stri
     return "תאריך לא זמין";
   }
 };
+
+// Compare two dates to check if they're the same day
+export const isSameDay = (date1: Date, date2: Date): boolean => {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  );
+};
+
+// Get today's date with time set to midnight
+export const getTodayDate = (): Date => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+};
