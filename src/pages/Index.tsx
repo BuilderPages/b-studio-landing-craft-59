@@ -7,13 +7,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HomeGallery from "@/components/HomeGallery";
 import ContactForm from "@/components/ContactForm";
-import { getSiteContent, getGalleryItems, recordPageView } from "@/services/database";
+import { getSiteContent, recordPageView } from "@/services/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const content = getSiteContent();
-  const galleryItems = getGalleryItems();
 
   useEffect(() => {
     // Record page view for analytics
@@ -40,12 +39,7 @@ const Index = () => {
         />
         <ServicesSection />
         <HomeGallery 
-          items={galleryItems}
           autoplayInterval={5000}
-          title={content.galleryTitle || "העבודות שלנו"}
-          description={content.galleryDescription || "הצצה לפרויקטים האחרונים שלנו"}
-          ctaText={content.galleryCtaText || "צפה בכל העבודות"}
-          ctaLink={content.galleryCtaLink || "/gallery"}
         />
         <CtaSection 
           title={content.ctaTitle || "מוכנים לקחת את העסק שלכם לשלב הבא?"}

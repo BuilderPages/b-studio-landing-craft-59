@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -6,12 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { getSiteContent, updateSiteContent, getNavigation, updateNavigation, getFooterContent, updateFooterContent } from "@/services/database";
+import { getSiteContent, saveSiteContent, getNavigation, updateNavigation, getFooterContent, updateFooterContent } from "@/services/database";
 import { replaceYearPlaceholder } from "@/utils/contentUtils";
 import { v4 as uuidv4 } from 'uuid';
 
 // Define types for site content and navigation
-interface SiteContent {
+interface AdminSiteContent {
   heroTitle: string;
   heroSubtitle: string;
   heroCtaText: string;
@@ -79,7 +78,7 @@ interface FooterContent {
 
 const AdminContent = () => {
   const { toast } = useToast();
-  const [content, setContent] = useState<SiteContent>({} as SiteContent);
+  const [content, setContent] = useState<AdminSiteContent>({} as AdminSiteContent);
   const [navigation, setNavigation] = useState<Navigation>({ items: [] });
   const [footerContent, setFooterContent] = useState<FooterContent>({} as FooterContent);
   const [activeTab, setActiveTab] = useState("main");
@@ -90,7 +89,34 @@ const AdminContent = () => {
     const navItems = getNavigation();
     const footer = getFooterContent();
     
-    setContent(siteContent as SiteContent);
+    // Convert the siteContent to AdminSiteContent
+    const adminContent: AdminSiteContent = {
+      heroTitle: siteContent.heroTitle || '',
+      heroSubtitle: siteContent.heroSubtitle || '',
+      heroCtaText: siteContent.heroCtaText || '',
+      heroCtaLink: siteContent.heroCtaLink || '',
+      heroBackgroundImage: siteContent.heroBackgroundImage || '',
+      ctaTitle: siteContent.ctaTitle || '',
+      ctaDescription: siteContent.ctaDescription || '',
+      ctaButtonText: siteContent.ctaButtonText || '',
+      ctaButtonLink: siteContent.ctaButtonLink || '',
+      videoUrl: siteContent.videoUrl || '',
+      galleryTitle: siteContent.galleryTitle || '',
+      galleryDescription: siteContent.galleryDescription || '',
+      galleryCtaText: siteContent.galleryCtaText || '',
+      galleryCtaLink: siteContent.galleryCtaLink || '',
+      aboutTitle: siteContent.aboutTitle || '',
+      aboutText: siteContent.aboutText || '',
+      contactInfo: {
+        phone: siteContent.contactInfo?.phone || '',
+        email: siteContent.contactInfo?.email || '',
+        address: siteContent.contactInfo?.address || '',
+        whatsapp: siteContent.contactInfo?.whatsapp || '',
+      },
+      footerText: siteContent.footerText || '',
+    };
+    
+    setContent(adminContent);
     setNavigation(navItems as Navigation);
     setFooterContent(footer as FooterContent);
   }, []);
@@ -191,7 +217,17 @@ const AdminContent = () => {
   const saveChanges = (type: 'content' | 'navigation' | 'footer') => {
     try {
       if (type === 'content') {
-        updateSiteContent(content);
+        // Create a merged site content object
+        const siteContent = getSiteContent();
+        const updatedContent = {
+          ...siteContent,
+          ...content,
+          contactInfo: {
+            ...siteContent.contactInfo,
+            ...content.contactInfo
+          }
+        };
+        saveSiteContent(updatedContent);
       } else if (type === 'navigation') {
         updateNavigation(navigation);
       } else if (type === 'footer') {

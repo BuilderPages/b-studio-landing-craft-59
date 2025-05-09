@@ -24,7 +24,9 @@ const ContactPage = () => {
     await saveContact({
       ...formData,
       device,
-      // Note: date is now handled by the database service
+      name: formData.name || "", // Ensure name is provided
+      email: formData.email || "", // Ensure email is provided
+      message: formData.message || "", // Ensure message is provided
     });
   };
 

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import { type UseEmblaCarouselType } from "embla-carousel-react";
-import { GalleryItem, getHomeGalleryItems } from "@/services/database";
+import { GalleryItem, getHomeGalleryItems, getSiteContent } from "@/services/database";
 
 interface HomeGalleryProps {
   autoplayInterval?: number;
@@ -16,11 +16,12 @@ const HomeGallery: React.FC<HomeGalleryProps> = ({
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const content = getSiteContent();
   const [settings, setSettings] = useState({
-    title: "העבודות שלנו",
-    description: "הצצה לפרויקטים האחרונים שלנו",
-    ctaText: "צפה בכל העבודות",
-    ctaLink: "/gallery"
+    title: content.galleryTitle || "העבודות שלנו",
+    description: content.galleryDescription || "הצצה לפרויקטים האחרונים שלנו",
+    ctaText: content.galleryCtaText || "צפה בכל העבודות",
+    ctaLink: content.galleryCtaLink || "/gallery"
   });
   
   // Load gallery items and settings

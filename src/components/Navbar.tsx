@@ -7,13 +7,6 @@ import { getNavigation } from "@/services/database";
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
 
-interface NavItem {
-  id: string;
-  label: string;
-  url: string;
-  highlight?: boolean;
-}
-
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
