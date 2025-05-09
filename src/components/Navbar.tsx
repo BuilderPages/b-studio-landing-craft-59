@@ -3,14 +3,23 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
-import { getNavigation } from "@/services/database";
+import { getSiteContent } from "@/services/database";
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
+
+// Default navigation items in case database doesn't provide them
+const defaultNavItems = [
+  { id: "1", label: "בית", url: "/", highlight: false },
+  { id: "2", label: "שירותים", url: "/services", highlight: false },
+  { id: "3", label: "עבודות", url: "/gallery", highlight: false },
+  { id: "4", label: "אודות", url: "/about", highlight: false },
+];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navItems = getNavigation().items || [];
+  const siteContent = getSiteContent();
+  const navItems = siteContent.navigation?.items || defaultNavItems;
 
   useEffect(() => {
     const handleScroll = () => {

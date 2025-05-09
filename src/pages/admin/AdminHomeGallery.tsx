@@ -9,6 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import AdminBackNavigation from "@/components/admin/AdminBackNavigation";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 const AdminHomeGallery = () => {
   const { toast } = useToast();
@@ -105,6 +107,10 @@ const AdminHomeGallery = () => {
     setNewItem((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleImageSelected = (imageUrl: string) => {
+    setNewItem((prev) => ({ ...prev, imageUrl }));
+  };
+
   const handleSettingsChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -155,11 +161,10 @@ const AdminHomeGallery = () => {
   return (
     <AdminLayout>
       <div className="space-y-6">
+        <AdminBackNavigation title="ניהול גלריה בדף הבית" />
+
         <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold">ניהול גלריה בדף הבית</h1>
-            <p className="text-muted-foreground">נהל את הפריטים המוצגים בגלריה בעמוד הבית</p>
-          </div>
+          <p className="text-muted-foreground">נהל את הפריטים המוצגים בגלריה בעמוד הבית</p>
           <div className="flex flex-wrap gap-2">
             <Button onClick={() => setIsSettingsDialogOpen(true)}>הגדרות כלליות</Button>
             <Button onClick={() => handleEdit(null)}>הוסף פריט</Button>
@@ -266,14 +271,10 @@ const AdminHomeGallery = () => {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="imageUrl" className="text-right block">כתובת תמונה (URL)</label>
-              <Input
-                id="imageUrl"
-                name="imageUrl"
-                value={newItem.imageUrl}
-                onChange={handleInputChange}
-                className="text-right"
-                placeholder="הזן כתובת URL של תמונה"
+              <label className="text-right block">תמונה</label>
+              <ImageUpload 
+                onImageSelected={handleImageSelected}
+                currentImage={newItem.imageUrl}
               />
             </div>
             <div className="space-y-2">
@@ -287,18 +288,6 @@ const AdminHomeGallery = () => {
                 className="text-right"
               />
             </div>
-            {newItem.imageUrl && (
-              <div className="mt-2 rounded-md overflow-hidden">
-                <img 
-                  src={newItem.imageUrl} 
-                  alt="תצוגה מקדימה" 
-                  className="max-h-40 object-contain mx-auto"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://via.placeholder.com/150?text=Image+Error";
-                  }}
-                />
-              </div>
-            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>

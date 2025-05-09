@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
+import AdminBackNavigation from "@/components/admin/AdminBackNavigation";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 const AdminGallery = () => {
   const { toast } = useToast();
@@ -95,12 +97,17 @@ const AdminGallery = () => {
     const { name, value } = e.target;
     setNewItem((prev) => ({ ...prev, [name]: value }));
   };
+  
+  const handleImageSelected = (imageUrl: string) => {
+    setNewItem((prev) => ({ ...prev, imageUrl }));
+  };
 
   return (
     <AdminLayout>
       <div className="space-y-6">
+        <AdminBackNavigation title="ניהול גלריה" />
+
         <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between gap-4">
-          <h1 className="text-2xl md:text-3xl font-bold">ניהול גלריה</h1>
           <div className="flex flex-wrap gap-2">
             <Button onClick={() => handleEdit(null)}>הוסף פריט</Button>
             <Button variant="outline" onClick={handleRefresh}>רענן</Button>
@@ -179,14 +186,10 @@ const AdminGallery = () => {
               </select>
             </div>
             <div className="space-y-2">
-              <label htmlFor="imageUrl" className="text-right block">כתובת תמונה (URL)</label>
-              <Input
-                id="imageUrl"
-                name="imageUrl"
-                value={newItem.imageUrl}
-                onChange={handleInputChange}
-                className="text-right"
-                placeholder="הזן כתובת URL של תמונה"
+              <label className="text-right block">תמונה</label>
+              <ImageUpload 
+                onImageSelected={handleImageSelected} 
+                currentImage={newItem.imageUrl}
               />
             </div>
             <div className="space-y-2">
@@ -200,18 +203,6 @@ const AdminGallery = () => {
                 className="text-right"
               />
             </div>
-            {newItem.imageUrl && (
-              <div className="mt-2 rounded-md overflow-hidden">
-                <img 
-                  src={newItem.imageUrl} 
-                  alt="תצוגה מקדימה" 
-                  className="max-h-40 object-contain mx-auto"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://via.placeholder.com/150?text=Image+Error";
-                  }}
-                />
-              </div>
-            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
