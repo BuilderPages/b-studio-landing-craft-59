@@ -7,8 +7,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getTodayDate, isSameDay } from "@/utils/dateUtils";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { CalendarDays, ChartBar, ChartLine } from "lucide-react";
 
 interface BannedIP {
   ip: string;
@@ -122,7 +122,10 @@ const AdminAnalytics = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">סך הכל צפיות</CardTitle>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ChartBar className="h-5 w-5 text-muted-foreground" />
+                    סך הכל צפיות
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{filteredPageViews.length}</div>
@@ -131,7 +134,10 @@ const AdminAnalytics = () => {
               
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">מכשירים ייחודיים</CardTitle>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ChartLine className="h-5 w-5 text-muted-foreground" />
+                    מכשירים ייחודיים
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{deviceData.length}</div>
@@ -140,7 +146,10 @@ const AdminAnalytics = () => {
               
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">דפים נצפים</CardTitle>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ChartBar className="h-5 w-5 text-muted-foreground" />
+                    דפים נצפים
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{pageViewsData.length}</div>
@@ -149,7 +158,10 @@ const AdminAnalytics = () => {
               
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">משתמשים אונליין</CardTitle>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CalendarDays className="h-5 w-5 text-muted-foreground" />
+                    משתמשים אונליין
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{Object.keys(onlineUsers).length}</div>
@@ -160,46 +172,45 @@ const AdminAnalytics = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>צפיות לפי דף</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <ChartBar className="h-5 w-5 text-muted-foreground" />
+                    צפיות לפי דף
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="h-[300px]">
-                  <ChartContainer
-                    config={{
-                      pageViews: { color: "#1E40AF" }
-                    }}
-                  >
+                <CardContent className="h-[300px] pt-4">
+                  <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={pageViewsData}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 40 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
                       <XAxis dataKey="name" angle={-45} textAnchor="end" />
                       <YAxis />
-                      <ChartTooltip
-                        content={
-                          <ChartTooltipContent 
-                            labelFormatter={(label) => `דף: ${label}`}
-                          />
-                        }
+                      <Tooltip 
+                        formatter={(value) => [`${value} צפיות`, 'סך הכל']}
+                        labelFormatter={(label) => `דף: ${label}`}
                       />
-                      <Bar dataKey="views" name="pageViews" />
+                      <Bar dataKey="views" name="צפיות" fill="#0EA5E9" radius={[4, 4, 0, 0]} />
                     </BarChart>
-                  </ChartContainer>
+                  </ResponsiveContainer>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardHeader>
-                  <CardTitle>התפלגות מכשירים</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <ChartBar className="h-5 w-5 text-muted-foreground" />
+                    התפלגות מכשירים
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="h-[300px]">
+                <CardContent className="h-[300px] pt-4">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
                         data={deviceData}
                         cx="50%"
                         cy="50%"
-                        outerRadius={100}
+                        outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
                         nameKey="name"
@@ -208,11 +219,13 @@ const AdminAnalytics = () => {
                         {deviceData.map((entry, index) => (
                           <Cell 
                             key={`cell-${index}`} 
-                            fill={index === 0 ? "#1E40AF" : index === 1 ? "#0EA5E9" : "#F97316"} 
+                            fill={index === 0 ? "#1E40AF" : index === 1 ? "#0EA5E9" : "#9b87f5"} 
                           />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip 
+                        formatter={(value) => [`${value} צפיות`, '']}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -221,67 +234,61 @@ const AdminAnalytics = () => {
             
             <Card>
               <CardHeader>
-                <CardTitle>צפיות לאורך זמן</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <ChartBar className="h-5 w-5 text-muted-foreground" />
+                  צפיות לאורך זמן
+                </CardTitle>
               </CardHeader>
-              <CardContent className="h-[300px]">
-                <ChartContainer
-                  config={{
-                    views: { color: "#0EA5E9" }
-                  }}
-                >
+              <CardContent className="h-[300px] pt-4">
+                <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={timeData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 40 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="date" angle={-45} textAnchor="end" />
                     <YAxis />
-                    <ChartTooltip
-                      content={
-                        <ChartTooltipContent 
-                          labelFormatter={(label) => `תאריך: ${label}`}
-                        />
-                      }
+                    <Tooltip 
+                      formatter={(value) => [`${value} צפיות`, 'סך הכל']}
+                      labelFormatter={(label) => `תאריך: ${label}`}
                     />
-                    <Bar dataKey="views" name="views" />
+                    <Bar dataKey="views" name="צפיות" fill="#9b87f5" radius={[4, 4, 0, 0]} />
                   </BarChart>
-                </ChartContainer>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader>
-                <CardTitle>מבקרים ייחודיים לפי יום (לפי IP)</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <ChartLine className="h-5 w-5 text-muted-foreground" />
+                  מבקרים ייחודיים לפי יום (לפי IP)
+                </CardTitle>
               </CardHeader>
-              <CardContent className="h-[300px]">
-                <ChartContainer
-                  config={{
-                    visitors: { color: "#8884d8" }
-                  }}
-                >
+              <CardContent className="h-[300px] pt-4">
+                <ResponsiveContainer width="100%" height="100%">
                   <LineChart
                     data={uniqueVisitorData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 40 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
                     <XAxis dataKey="date" angle={-45} textAnchor="end" />
                     <YAxis />
-                    <ChartTooltip
-                      content={
-                        <ChartTooltipContent 
-                          labelFormatter={(label) => `תאריך: ${label}`}
-                        />
-                      }
+                    <Tooltip 
+                      formatter={(value) => [`${value} מבקרים`, '']}
+                      labelFormatter={(label) => `תאריך: ${label}`}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="visitors" 
-                      name="visitors" 
+                      name="מבקרים" 
                       strokeWidth={2} 
                       stroke="#8884d8" 
+                      dot={{ stroke: '#8884d8', strokeWidth: 2, r: 4, fill: 'white' }}
+                      activeDot={{ stroke: '#8884d8', strokeWidth: 2, r: 6, fill: '#8884d8' }}
                     />
                   </LineChart>
-                </ChartContainer>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
             
@@ -291,7 +298,7 @@ const AdminAnalytics = () => {
                   <CardTitle>ניהול חסימות IP</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex space-x-2 mb-4">
+                  <div className="flex gap-2 mb-4">
                     <Input
                       value={ipToBlock}
                       onChange={(e) => setIpToBlock(e.target.value)}
@@ -301,40 +308,42 @@ const AdminAnalytics = () => {
                     <Button onClick={() => banIP(ipToBlock)}>חסום IP</Button>
                   </div>
                   
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>כתובת IP</TableHead>
-                        <TableHead>תאריך חסימה</TableHead>
-                        <TableHead>פעולות</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {bannedIPs.length > 0 ? (
-                        bannedIPs.map((banned) => (
-                          <TableRow key={banned.ip}>
-                            <TableCell>{banned.ip}</TableCell>
-                            <TableCell>{new Date(banned.date).toLocaleDateString()}</TableCell>
-                            <TableCell>
-                              <Button 
-                                variant="destructive" 
-                                size="sm"
-                                onClick={() => unbanIP(banned.ip)}
-                              >
-                                בטל חסימה
-                              </Button>
+                  <div className="max-h-[300px] overflow-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>כתובת IP</TableHead>
+                          <TableHead>תאריך חסימה</TableHead>
+                          <TableHead>פעולות</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {bannedIPs.length > 0 ? (
+                          bannedIPs.map((banned) => (
+                            <TableRow key={banned.ip}>
+                              <TableCell>{banned.ip}</TableCell>
+                              <TableCell>{new Date(banned.date).toLocaleDateString()}</TableCell>
+                              <TableCell>
+                                <Button 
+                                  variant="destructive" 
+                                  size="sm"
+                                  onClick={() => unbanIP(banned.ip)}
+                                >
+                                  בטל חסימה
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center text-muted-foreground">
+                              אין כתובות IP חסומות
                             </TableCell>
                           </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={3} className="text-center text-muted-foreground">
-                            אין כתובות IP חסומות
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </CardContent>
               </Card>
               
@@ -343,40 +352,42 @@ const AdminAnalytics = () => {
                   <CardTitle>משתמשים אונליין כרגע</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>כתובת IP</TableHead>
-                        <TableHead>פעילות אחרונה</TableHead>
-                        <TableHead>פעולות</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {Object.keys(onlineUsers).length > 0 ? (
-                        Object.keys(onlineUsers).map((ip) => (
-                          <TableRow key={ip}>
-                            <TableCell>{ip}</TableCell>
-                            <TableCell>{new Date(onlineUsers[ip]).toLocaleTimeString()}</TableCell>
-                            <TableCell>
-                              <Button 
-                                variant="destructive" 
-                                size="sm"
-                                onClick={() => banIP(ip)}
-                              >
-                                חסום IP
-                              </Button>
+                  <div className="max-h-[300px] overflow-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>כתובת IP</TableHead>
+                          <TableHead>פעילות אחרונה</TableHead>
+                          <TableHead>פעולות</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {Object.keys(onlineUsers).length > 0 ? (
+                          Object.keys(onlineUsers).map((ip) => (
+                            <TableRow key={ip}>
+                              <TableCell>{ip}</TableCell>
+                              <TableCell>{new Date(onlineUsers[ip]).toLocaleTimeString()}</TableCell>
+                              <TableCell>
+                                <Button 
+                                  variant="destructive" 
+                                  size="sm"
+                                  onClick={() => banIP(ip)}
+                                >
+                                  חסום IP
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center text-muted-foreground">
+                              אין משתמשים מחוברים כרגע
                             </TableCell>
                           </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={3} className="text-center text-muted-foreground">
-                            אין משתמשים מחוברים כרגע
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -386,7 +397,7 @@ const AdminAnalytics = () => {
                 <CardTitle>פרטי צפיות אחרונות</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
+                <div className="overflow-auto max-h-[400px]">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
