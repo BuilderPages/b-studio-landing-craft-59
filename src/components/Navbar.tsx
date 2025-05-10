@@ -25,7 +25,12 @@ const Navbar = () => {
   useEffect(() => {
     const navigation = getNavigation();
     if (navigation && navigation.items && navigation.items.length > 0) {
-      setNavItems(navigation.items);
+      // Ensure all items have the highlight property (set to false if missing)
+      const itemsWithHighlight = navigation.items.map(item => ({
+        ...item,
+        highlight: item.highlight || false
+      }));
+      setNavItems(itemsWithHighlight);
     }
   }, []);
 

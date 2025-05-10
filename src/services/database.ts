@@ -54,6 +54,7 @@ export interface SiteContent {
   aboutText: string;
   footerText: string;
   logoUrl?: string;
+  logoLink?: string; // Added logoLink property
   servicesTitle?: string;
   servicesDescription?: string;
   primaryColor?: string;
@@ -320,6 +321,7 @@ export function getSiteContent(): SiteContent {
     aboutText: 'אנחנו סטודיו בוטיק המתמחה במיתוג, עיצוב גרפי ובניית אתרים.',
     footerText: '© {year} B Studio. כל הזכויות שמורות.',
     logoUrl: '',
+    logoLink: '/', // Added default value for logoLink
     servicesTitle: 'השירותים שלנו',
     servicesDescription: 'אנו מציעים מגוון שירותים מקצועיים',
     primaryColor: '#9b87f5',
