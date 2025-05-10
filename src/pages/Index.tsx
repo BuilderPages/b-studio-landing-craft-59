@@ -35,7 +35,7 @@ const Index = () => {
           subtitle={content.heroSubtitle}
           ctaText={content.heroCtaText}
           ctaLink={content.heroCtaLink || "/contact"}
-          backgroundImage={content.heroBackgroundImage}
+          backgroundImage={content.heroBackgroundImage || "https://images.unsplash.com/photo-1493397212122-2b85dda8106b"}
         />
         <ServicesSection />
         <HomeGallery 

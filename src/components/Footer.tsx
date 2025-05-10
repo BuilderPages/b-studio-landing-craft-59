@@ -15,15 +15,17 @@ const Footer = () => {
       <div className="container max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
-            <Logo />
+            <div className="flex justify-end w-full">
+              <Logo />
+            </div>
             <p className="mt-4 text-gray-600 text-right">
               {footerContent.description}
             </p>
           </div>
 
-          <div>
-            <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.quickLinksTitle}</h3>
-            <div className="space-y-2 flex flex-col items-end text-right">
+          <div className="flex flex-col items-end">
+            <h3 className="font-bold text-gray-800 mb-4 text-right w-full">{footerContent.quickLinksTitle}</h3>
+            <div className="space-y-2 flex flex-col items-end w-full">
               {footerContent.quickLinks?.map((link, index) => (
                 <Link 
                   key={index}
@@ -36,9 +38,9 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
-            <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.servicesTitle}</h3>
-            <div className="space-y-2 flex flex-col items-end text-right">
+          <div className="flex flex-col items-end">
+            <h3 className="font-bold text-gray-800 mb-4 text-right w-full">{footerContent.servicesTitle}</h3>
+            <div className="space-y-2 flex flex-col items-end w-full">
               {footerContent.serviceLinks?.map((link, index) => (
                 <Link 
                   key={index}
@@ -51,9 +53,9 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
-            <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.contactTitle}</h3>
-            <div className="space-y-2 flex flex-col items-end text-right">
+          <div className="flex flex-col items-end">
+            <h3 className="font-bold text-gray-800 mb-4 text-right w-full">{footerContent.contactTitle}</h3>
+            <div className="space-y-2 flex flex-col items-end w-full">
               <p className="text-gray-600">{footerContent.contactInfo?.phone}</p>
               <p className="text-gray-600">{footerContent.contactInfo?.email}</p>
               <p className="text-gray-600">{footerContent.contactInfo?.address}</p>

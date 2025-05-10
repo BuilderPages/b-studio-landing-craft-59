@@ -77,6 +77,11 @@
   }
 }
 
+/* Shadow text for better readability on images */
+.shadow-text {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 /* High contrast mode */
 .high-contrast {
   --background: 0 0% 100%;
