@@ -16,16 +16,16 @@ const Hero: React.FC<HeroProps> = ({
   subtitle,
   ctaText,
   ctaLink,
-  backgroundImage = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+  backgroundImage = "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
 }) => {
   return (
     <div className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Improved gradient overlay */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-tr from-bstudio-primary/80 via-bstudio-secondary/70 to-bstudio-accent/60 opacity-90"></div>
+      {/* Enhanced gradient overlay with more appealing colors */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-bstudio-primary/70 via-bstudio-secondary/60 to-purple-400/50 opacity-85"></div>
       
       {/* Background image with better opacity */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-30"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
         style={{ backgroundImage: `url('${backgroundImage}')` }}
       ></div>
 
@@ -47,11 +47,12 @@ const Hero: React.FC<HeroProps> = ({
         </div>
       </div>
 
-      {/* Enhanced decorative elements */}
+      {/* Enhanced decorative elements with softer colors */}
       <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-background to-transparent"></div>
-      <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-bstudio-secondary/30 rounded-full blur-3xl"></div>
-      <div className="absolute -top-10 -right-10 w-64 h-64 bg-bstudio-accent/30 rounded-full blur-3xl"></div>
+      <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl"></div>
+      <div className="absolute -top-10 -right-10 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"></div>
       <div className="absolute top-1/3 left-1/4 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+      <div className="absolute top-2/3 right-1/4 w-24 h-24 bg-blue-300/15 rounded-full blur-xl"></div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ const Logo: React.FC<LogoProps> = ({ className }) => {
   const logoLink = siteContent.logoLink || "/"; // Default to home if not set
 
   return (
-    <Link to={logoLink} className={cn("flex items-center justify-end gap-2 no-underline w-full", className)}>
+    <Link to={logoLink} className={cn("flex items-center justify-end gap-2 no-underline", className)}>
       {logoUrl ? (
         <img src={logoUrl} alt="B Studio Logo" className="h-8" />
       ) : (
@@ -32,6 +32,3 @@ const Logo: React.FC<LogoProps> = ({ className }) => {
       )}
     </Link>
   );
-};
-
-export default Logo;
