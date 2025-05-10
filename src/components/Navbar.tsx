@@ -18,9 +18,16 @@ const defaultNavItems = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navItems, setNavItems] = useState(defaultNavItems);
   const siteContent = getSiteContent();
-  const navigation = getNavigation();
-  const navItems = navigation.items || defaultNavItems;
+
+  // Fetch navigation data and update state when it changes
+  useEffect(() => {
+    const navigation = getNavigation();
+    if (navigation && navigation.items && navigation.items.length > 0) {
+      setNavItems(navigation.items);
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {

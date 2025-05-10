@@ -2,6 +2,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { getSiteContent } from "@/services/database";
+import { Link } from "react-router-dom";
 
 interface LogoProps {
   className?: string;
@@ -10,9 +11,10 @@ interface LogoProps {
 const Logo: React.FC<LogoProps> = ({ className }) => {
   const siteContent = getSiteContent();
   const logoUrl = siteContent.logoUrl;
+  const logoLink = siteContent.logoLink || "/"; // Default to home if not set
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <Link to={logoLink} className={cn("flex items-center gap-2 no-underline", className)}>
       {logoUrl ? (
         <img src={logoUrl} alt="B Studio Logo" className="h-8" />
       ) : (
@@ -28,7 +30,7 @@ const Logo: React.FC<LogoProps> = ({ className }) => {
           </div>
         </>
       )}
-    </div>
+    </Link>
   );
 };
 

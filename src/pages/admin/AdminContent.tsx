@@ -40,6 +40,7 @@ interface AdminSiteContent {
   };
   footerText: string;
   logoUrl?: string;
+  logoLink?: string;
   servicesTitle?: string;
   servicesDescription?: string;
   primaryColor?: string;
@@ -127,6 +128,7 @@ const AdminContent = () => {
       },
       footerText: siteContent.footerText || '',
       logoUrl: siteContent.logoUrl || '',
+      logoLink: siteContent.logoLink || '/',
       servicesTitle: siteContent.servicesTitle || 'השירותים שלנו',
       servicesDescription: siteContent.servicesDescription || 'אנחנו מציעים מגוון רחב של שירותים',
       primaryColor: siteContent.primaryColor || '#9b87f5',
@@ -331,6 +333,17 @@ const AdminContent = () => {
                         )}
                       </div>
                     </div>
+                    
+                    <h3 className="text-lg font-medium mt-2">קישור לוגו</h3>
+                    <Input 
+                      value={content.logoLink || "/"} 
+                      onChange={(e) => handleContentChange('logoLink', e.target.value)} 
+                      className="text-right"
+                      placeholder="/ (לדף הבית)"
+                    />
+                    <p className="text-sm text-gray-500 text-right">
+                      הגדר לאן הלוגו יוביל בלחיצה. לדוגמה: / לדף הבית, /contact לדף צור קשר
+                    </p>
                   </div>
                   
                   <div className="space-y-4 pt-6 border-t">
