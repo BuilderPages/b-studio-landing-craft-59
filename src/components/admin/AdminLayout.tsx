@@ -205,17 +205,15 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="p-6 lg:p-8">
         {showMobileBackNav && (
           <div className="lg:hidden mb-6">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-                onClick={() => navigate('/admin/dashboard')}
-              >
-                <ChevronRight className="h-4 w-4" />
-                <span>חזרה לדשבורד</span>
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+              onClick={() => navigate('/admin/dashboard')}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span>חזרה לדשבורד</span>
+            </Button>
           </div>
         )}
         {children}

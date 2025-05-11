@@ -1,149 +1,55 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import GalleryPage from "./pages/GalleryPage";
-import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import AccessibilityStatement from "./pages/AccessibilityStatement";
+import ContactPage from "./pages/ContactPage";
+import ServicesPage from "./pages/ServicesPage";
+import GalleryPage from "./pages/GalleryPage";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminContacts from "./pages/admin/AdminContacts";
 import AdminGallery from "./pages/admin/AdminGallery";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
-import AdminHomeGallery from "./pages/admin/AdminHomeGallery";
+import AdminSettings from "./pages/admin/AdminSettings";
 import AdminBackups from "./pages/admin/AdminBackups";
-import AdminSettings from "@/pages/admin/AdminSettings";
-import AdminLogin from "@/pages/admin/AdminLogin";
-import AdminSlider from "@/pages/admin/AdminSlider";
-import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
-import AccessibilityWidget from "./components/AccessibilityWidget";
-
-const queryClient = new QueryClient();
+import AdminHomeGallery from "./pages/admin/AdminHomeGallery";
+import AdminSlider from "./pages/admin/AdminSlider";
+import AdminAuthGuard from "./components/admin/AdminAuthGuard";
+import AccessibilityStatement from "./pages/AccessibilityStatement";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function App() {
-  // Add RTL direction to the document for Hebrew support
-  useEffect(() => {
-    document.documentElement.dir = "rtl";
-  }, []);
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          {/* Skip to content link - accessibility feature */}
-          <a href="#main-content" className="skip-to-content">
-            דלג לתוכן העיקרי
-          </a>
-          
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/accessibility" element={<AccessibilityStatement />} />
-            
-            {/* Admin Routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <AdminAuthGuard>
-                  <AdminDashboard />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/dashboard"
-              element={
-                <AdminAuthGuard>
-                  <AdminDashboard />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/analytics"
-              element={
-                <AdminAuthGuard>
-                  <AdminAnalytics />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/contacts"
-              element={
-                <AdminAuthGuard>
-                  <AdminContacts />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/content"
-              element={
-                <AdminAuthGuard>
-                  <AdminContent />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/gallery"
-              element={
-                <AdminAuthGuard>
-                  <AdminGallery />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/home-gallery"
-              element={
-                <AdminAuthGuard>
-                  <AdminHomeGallery />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/backups"
-              element={
-                <AdminAuthGuard>
-                  <AdminBackups />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/settings"
-              element={
-                <AdminAuthGuard>
-                  <AdminSettings />
-                </AdminAuthGuard>
-              }
-            />
-            <Route
-              path="/admin/slider"
-              element={
-                <AdminAuthGuard>
-                  <AdminSlider />
-                </AdminAuthGuard>
-              }
-            />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          
-          {/* Accessibility widget */}
-          <AccessibilityWidget />
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/accessibility" element={<AccessibilityStatement />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        
+        {/* Admin routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route element={<AdminAuthGuard />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/contacts" element={<AdminContacts />} />
+          <Route path="/admin/gallery" element={<AdminGallery />} />
+          <Route path="/admin/content" element={<AdminContent />} />
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
+          <Route path="/admin/backups" element={<AdminBackups />} />
+          <Route path="/admin/home-gallery" element={<AdminHomeGallery />} />
+          <Route path="/admin/slider" element={<AdminSlider />} />
+        </Route>
+        
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
 

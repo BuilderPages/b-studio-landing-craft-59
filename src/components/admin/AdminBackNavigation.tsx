@@ -1,8 +1,6 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 
 interface AdminBackNavigationProps {
   title: string;
@@ -17,16 +15,7 @@ const AdminBackNavigation: React.FC<AdminBackNavigationProps> = ({
 
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-6">
-      <div className="flex items-center gap-2 mb-4 md:mb-0">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-1"
-          onClick={() => navigate(backTo)}
-        >
-          <ChevronRight className="h-4 w-4" />
-          <span>חזרה</span>
-        </Button>
+      <div className="mb-4 md:mb-0">
         <h1 className="text-2xl md:text-3xl font-bold">{title}</h1>
       </div>
     </div>
