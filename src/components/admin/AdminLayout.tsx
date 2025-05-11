@@ -1,3 +1,4 @@
+
 import React from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -180,7 +181,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
       <div className="p-6 lg:p-8">
         <div className="lg:hidden mb-6">
-          <AdminBackNavigation />
+          <AdminBackNavigation title="ממשק ניהול" />
         </div>
         {children}
       </div>
