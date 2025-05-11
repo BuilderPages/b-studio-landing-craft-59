@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -30,7 +29,12 @@ const WorksSlider: React.FC<{
     setDisplayCount(maxItems);
     
     if (galleryItems && galleryItems.length > 0) {
-      setWorks(galleryItems.slice(0, maxItems));
+      // Make sure each item has a category, using a default if needed
+      const itemsWithCategory = galleryItems.map(item => ({
+        ...item,
+        category: item.category || "עבודות"
+      }));
+      setWorks(itemsWithCategory.slice(0, maxItems));
     } else {
       // Use sample data as fallback (moved inside for better scope)
       const sampleWorks = [

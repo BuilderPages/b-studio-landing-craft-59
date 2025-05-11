@@ -10,7 +10,7 @@ const AboutPage = () => {
     <div>
       <Hero 
         title={content.aboutTitle || "אודות"}
-        subtitle={content.aboutSubtitle || "קצת עלינו ועל הדרך שלנו"}
+        subtitle={content.aboutText || "קצת עלינו ועל הדרך שלנו"}
         ctaText="צור קשר"
         ctaLink="/contact"
         backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c"
