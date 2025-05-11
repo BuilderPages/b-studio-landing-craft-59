@@ -5,95 +5,97 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { getHomeGalleryItems } from "@/services/database";
 
-// Sample works data for the slider
-const sampleWorks = [
-  {
-    id: "1",
-    title: "עיצוב לוגו לחברת טכנולוגיה",
-    imageUrl: "https://images.unsplash.com/photo-1626785774573-4b799315345d",
-    description: "עיצוב זהות מותגית לחברת סטארט-אפ בתחום הטכנולוגיה"
-  },
-  {
-    id: "2",
-    title: "עיצוב אתר אינטרנט",
-    imageUrl: "https://images.unsplash.com/photo-1481487196290-c152efe083f5",
-    description: "אתר רספונסיבי עם חווית משתמש מיטבית למותג אופנה"
-  },
-  {
-    id: "3",
-    title: "קמפיין פרסומי",
-    imageUrl: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
-    description: "סדרת מודעות פרסום לקמפיין דיגיטלי"
-  },
-  {
-    id: "4",
-    title: "עיצוב אריזה",
-    imageUrl: "https://images.unsplash.com/photo-1547592180-85f173990554",
-    description: "עיצוב אריזה למוצר קוסמטיקה חדשני"
-  },
-  {
-    id: "5",
-    title: "כרטיס ביקור",
-    imageUrl: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea",
-    description: "עיצוב כרטיסי ביקור יוקרתיים למשרד עורכי דין"
-  },
-  {
-    id: "6",
-    title: "עיצוב מודעה לעיתון",
-    imageUrl: "https://images.unsplash.com/photo-1557200134-90327ee9fafa",
-    description: "מודעת פרסום מעוצבת לפרסום בעיתונות מודפסת"
-  },
-  {
-    id: "7",
-    title: "עיצוב חוברת תדמית",
-    imageUrl: "https://images.unsplash.com/photo-1586281380117-5a60ae2050cc",
-    description: "עיצוב חוברת תדמית מקצועית לחברת נדל״ן"
-  },
-  {
-    id: "8",
-    title: "עיצוב פוסטר",
-    imageUrl: "https://images.unsplash.com/photo-1561070791-2526d30994b5",
-    description: "עיצוב פוסטר לאירוע תרבותי"
-  },
-  {
-    id: "9",
-    title: "מיתוג מסעדה",
-    imageUrl: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92",
-    description: "עיצוב זהות מותגית מלאה למסעדה חדשה"
-  },
-  {
-    id: "10",
-    title: "עיצוב UI/UX לאפליקציה",
-    imageUrl: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e",
-    description: "עיצוב ממשק משתמש אינטואיטיבי לאפליקציית מובייל"
-  }
-];
-
-interface WorksSliderProps {
+const WorksSlider: React.FC<{
   autoplaySpeed?: number;
   title?: string;
   maxWorks?: number;
-}
-
-const WorksSlider: React.FC<WorksSliderProps> = ({ 
+}> = ({ 
   autoplaySpeed = 3000,
   title = "עבודות לדוגמא",
-  maxWorks = 10
+  maxWorks,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [works, setWorks] = useState<any[]>([]);
   const [isPlaying, setIsPlaying] = useState(true);
   const [selectedWork, setSelectedWork] = useState<any | null>(null);
+  const [displayCount, setDisplayCount] = useState(10);
   
   useEffect(() => {
     // Try to get works from the database
     const galleryItems = getHomeGalleryItems();
     
+    // Get max items setting from localStorage (set in admin panel)
+    const savedMaxItems = localStorage.getItem('maxSliderItems');
+    const maxItems = savedMaxItems ? parseInt(savedMaxItems) : maxWorks || 10;
+    setDisplayCount(maxItems);
+    
     if (galleryItems && galleryItems.length > 0) {
-      setWorks(galleryItems.slice(0, maxWorks));
+      setWorks(galleryItems.slice(0, maxItems));
     } else {
-      // Use sample data as fallback
-      setWorks(sampleWorks.slice(0, maxWorks));
+      // Use sample data as fallback (moved inside for better scope)
+      const sampleWorks = [
+        {
+          id: "1",
+          title: "עיצוב לוגו לחברת טכנולוגיה",
+          imageUrl: "https://images.unsplash.com/photo-1626785774573-4b799315345d",
+          description: "עיצוב זהות מותגית לחברת סטארט-אפ בתחום הטכנולוגיה"
+        },
+        {
+          id: "2",
+          title: "עיצוב אתר אינטרנט",
+          imageUrl: "https://images.unsplash.com/photo-1481487196290-c152efe083f5",
+          description: "אתר רספונסיבי עם חווית משתמש מיטבית למותג אופנה"
+        },
+        {
+          id: "3",
+          title: "קמפיין פרסומי",
+          imageUrl: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
+          description: "סדרת מודעות פרסום לקמפיין דיגיטלי"
+        },
+        {
+          id: "4",
+          title: "עיצוב אריזה",
+          imageUrl: "https://images.unsplash.com/photo-1547592180-85f173990554",
+          description: "עיצוב אריזה למוצר קוסמטיקה חדשני"
+        },
+        {
+          id: "5",
+          title: "כרטיס ביקור",
+          imageUrl: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea",
+          description: "עיצוב כרטיסי ביקור יוקרתיים למשרד עורכי דין"
+        },
+        {
+          id: "6",
+          title: "עיצוב מודעה לעיתון",
+          imageUrl: "https://images.unsplash.com/photo-1557200134-90327ee9fafa",
+          description: "מודעת פרסום מעוצבת לפרסום בעיתונות מודפסת"
+        },
+        {
+          id: "7",
+          title: "עיצוב חוברת תדמית",
+          imageUrl: "https://images.unsplash.com/photo-1586281380117-5a60ae2050cc",
+          description: "עיצוב חוברת תדמית מקצועית לחברת נדל״ן"
+        },
+        {
+          id: "8",
+          title: "עיצוב פוסטר",
+          imageUrl: "https://images.unsplash.com/photo-1561070791-2526d30994b5",
+          description: "עיצוב פוסטר לאירוע תרבותי"
+        },
+        {
+          id: "9",
+          title: "מיתוג מסעדה",
+          imageUrl: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92",
+          description: "עיצוב זהות מותגית מלאה למסעדה חדשה"
+        },
+        {
+          id: "10",
+          title: "עיצוב UI/UX לאפליקציה",
+          imageUrl: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e",
+          description: "עיצוב ממשק משתמש אינטואיטיבי לאפליקציית מובייל"
+        }
+      ];
+      setWorks(sampleWorks.slice(0, maxItems));
     }
   }, [maxWorks]);
   

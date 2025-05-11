@@ -18,7 +18,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[250px_1fr]">
       <div className="bg-white border-l shadow-sm hidden lg:block">
         <div className="p-4">
-          <Link to="/" className="flex items-center justify-center mb-6">
+          <Link to="/admin/dashboard" className="flex items-center justify-center mb-6">
             <Logo className="h-8 w-8 mr-2" />
             <span className="font-bold text-lg">ממשק ניהול</span>
           </Link>
@@ -165,6 +165,24 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </svg>
               הגדרות
             </NavLink>
+            <NavLink
+              to="/admin/slider"
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-all",
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+                )
+              }
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                <circle cx="9" cy="9" r="2"></circle>
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+              </svg>
+              ניהול סליידר
+            </NavLink>
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 rounded-lg px-3 py-2 transition-all w-full text-left text-gray-500 hover:text-gray-900 hover:bg-gray-100"
@@ -190,4 +208,3 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default AdminLayout;
-
