@@ -23,9 +23,9 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col items-end">
             <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.quickLinksTitle}</h3>
-            <div className="space-y-2 flex flex-col items-end">
+            <div className="space-y-2 flex flex-col items-end text-right">
               {footerContent.quickLinks?.map((link, index) => (
                 <Link 
                   key={index}
@@ -38,9 +38,9 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col items-end">
             <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.servicesTitle}</h3>
-            <div className="space-y-2 flex flex-col items-end">
+            <div className="space-y-2 flex flex-col items-end text-right">
               {footerContent.serviceLinks?.map((link, index) => (
                 <Link 
                   key={index}
@@ -53,9 +53,9 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col items-end">
             <h3 className="font-bold text-gray-800 mb-4 text-right">{footerContent.contactTitle}</h3>
-            <div className="space-y-2 flex flex-col items-end">
+            <div className="space-y-2 flex flex-col items-end text-right">
               <p className="text-gray-600">{footerContent.contactInfo?.phone}</p>
               <p className="text-gray-600">{footerContent.contactInfo?.email}</p>
               <p className="text-gray-600">{footerContent.contactInfo?.address}</p>
