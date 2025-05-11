@@ -42,61 +42,71 @@ const WorksSlider: React.FC<{
           id: "1",
           title: "עיצוב לוגו לחברת טכנולוגיה",
           imageUrl: "https://images.unsplash.com/photo-1626785774573-4b799315345d",
-          description: "עיצוב זהות מותגית לחברת סטארט-אפ בתחום הטכנולוגיה"
+          description: "עיצוב זהות מותגית לחברת סטארט-אפ בתחום הטכנולוגיה",
+          category: "עיצוב"
         },
         {
           id: "2",
           title: "עיצוב אתר אינטרנט",
           imageUrl: "https://images.unsplash.com/photo-1481487196290-c152efe083f5",
-          description: "אתר רספונסיבי עם חווית משתמש מיטבית למותג אופנה"
+          description: "אתר רספונסיבי עם חווית משתמש מיטבית למותג אופנה",
+          category: "אתרים"
         },
         {
           id: "3",
           title: "קמפיין פרסומי",
           imageUrl: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
-          description: "סדרת מודעות פרסום לקמפיין דיגיטלי"
+          description: "סדרת מודעות פרסום לקמפיין דיגיטלי",
+          category: "פרסום"
         },
         {
           id: "4",
           title: "עיצוב אריזה",
           imageUrl: "https://images.unsplash.com/photo-1547592180-85f173990554",
-          description: "עיצוב אריזה למוצר קוסמטיקה חדשני"
+          description: "עיצוב אריזה למוצר קוסמטיקה חדשני",
+          category: "עיצוב"
         },
         {
           id: "5",
           title: "כרטיס ביקור",
           imageUrl: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea",
-          description: "עיצוב כרטיסי ביקור יוקרתיים למשרד עורכי דין"
+          description: "עיצוב כרטיסי ביקור יוקרתיים למשרד עורכי דין",
+          category: "עיצוב"
         },
         {
           id: "6",
           title: "עיצוב מודעה לעיתון",
           imageUrl: "https://images.unsplash.com/photo-1557200134-90327ee9fafa",
-          description: "מודעת פרסום מעוצבת לפרסום בעיתונות מודפסת"
+          description: "מודעת פרסום מעוצבת לפרסום בעיתונות מודפסת",
+          category: "פרסום"
         },
         {
           id: "7",
           title: "עיצוב חוברת תדמית",
           imageUrl: "https://images.unsplash.com/photo-1586281380117-5a60ae2050cc",
-          description: "עיצוב חוברת תדמית מקצועית לחברת נדל״ן"
+          description: "עיצוב חוברת תדמית מקצועית לחברת נדל״ן",
+          category: "עיצוב"
         },
         {
           id: "8",
           title: "עיצוב פוסטר",
           imageUrl: "https://images.unsplash.com/photo-1561070791-2526d30994b5",
-          description: "עיצוב פוסטר לאירוע תרבותי"
+          description: "עיצוב פוסטר לאירוע תרבותי",
+          category: "עיצוב"
         },
         {
           id: "9",
           title: "מיתוג מסעדה",
           imageUrl: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92",
-          description: "עיצוב זהות מותגית מלאה למסעדה חדשה"
+          description: "עיצוב זהות מותגית מלאה למסעדה חדשה",
+          category: "מיתוג"
         },
         {
           id: "10",
           title: "עיצוב UI/UX לאפליקציה",
           imageUrl: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e",
-          description: "עיצוב ממשק משתמש אינטואיטיבי לאפליקציית מובייל"
+          description: "עיצוב ממשק משתמש אינטואיטיבי לאפליקציית מובייל",
+          category: "UI/UX"
         }
       ];
       setWorks(sampleWorks.slice(0, maxItems));
@@ -183,6 +193,11 @@ const WorksSlider: React.FC<{
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
                   <h3 className="font-bold text-xl">{work.title}</h3>
                   <p className="text-sm text-white/80">{work.description}</p>
+                  {work.category && (
+                    <span className="inline-block px-2 py-1 mt-2 text-xs bg-primary/50 rounded-full">
+                      {work.category}
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
@@ -276,6 +291,13 @@ const WorksSlider: React.FC<{
               <div className="flex flex-col text-right">
                 <h3 className="text-2xl font-bold mb-2">{selectedWork.title}</h3>
                 <p className="text-gray-600">{selectedWork.description}</p>
+                {selectedWork.category && (
+                  <div className="mt-4">
+                    <span className="inline-block px-3 py-1 bg-gray-100 text-gray-800 rounded-full">
+                      {selectedWork.category}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           )}

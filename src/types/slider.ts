@@ -5,5 +5,5 @@ export interface SliderItem {
   imageUrl: string;
   description: string;
   order?: number;
-  category: string; // Adding the required category field
+  category: string;
 }

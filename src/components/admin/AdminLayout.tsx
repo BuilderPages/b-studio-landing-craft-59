@@ -1,13 +1,16 @@
 
 import React from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/Logo";
-import AdminBackNavigation from "@/components/admin/AdminBackNavigation";
 import { logout } from "@/services/authService";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Only show the mobile back navigation on pages other than dashboard
+  const showMobileBackNav = location.pathname !== "/admin/dashboard";
   
   const handleLogout = () => {
     logout();
@@ -198,9 +201,21 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
       <div className="p-6 lg:p-8">
-        <div className="lg:hidden mb-6">
-          <AdminBackNavigation title="ממשק ניהול" />
-        </div>
+        {showMobileBackNav && (
+          <div className="lg:hidden mb-6">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-1"
+                onClick={() => navigate('/admin/dashboard')}
+              >
+                <ChevronRight className="h-4 w-4" />
+                <span>חזרה לדשבורד</span>
+              </Button>
+            </div>
+          </div>
+        )}
         {children}
       </div>
     </div>

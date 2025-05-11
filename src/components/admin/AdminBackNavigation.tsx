@@ -11,7 +11,7 @@ interface AdminBackNavigationProps {
 
 const AdminBackNavigation: React.FC<AdminBackNavigationProps> = ({
   title,
-  backTo = "/admin",
+  backTo = "/admin/dashboard",
 }) => {
   const navigate = useNavigate();
 

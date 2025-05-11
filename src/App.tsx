@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +8,7 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import GalleryPage from "./pages/GalleryPage";
 import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
 import NotFound from "./pages/NotFound";
@@ -19,6 +21,7 @@ import AdminHomeGallery from "./pages/admin/AdminHomeGallery";
 import AdminBackups from "./pages/admin/AdminBackups";
 import AdminSettings from "@/pages/admin/AdminSettings";
 import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminSlider from "@/pages/admin/AdminSlider";
 import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
 import AccessibilityWidget from "./components/AccessibilityWidget";
 
@@ -45,11 +48,20 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/accessibility" element={<AccessibilityStatement />} />
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <AdminAuthGuard>
+                  <AdminDashboard />
+                </AdminAuthGuard>
+              }
+            />
             <Route
               path="/admin/dashboard"
               element={
@@ -111,6 +123,14 @@ function App() {
               element={
                 <AdminAuthGuard>
                   <AdminSettings />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/slider"
+              element={
+                <AdminAuthGuard>
+                  <AdminSlider />
                 </AdminAuthGuard>
               }
             />
