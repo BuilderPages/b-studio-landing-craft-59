@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HomeGallery from "@/components/HomeGallery";
 import ContactForm from "@/components/ContactForm";
-import WorksSlider from "@/components/WorksSlider";  // Import our new component
+import WorksSlider from "@/components/WorksSlider";
 import { getSiteContent, recordPageView } from "@/services/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

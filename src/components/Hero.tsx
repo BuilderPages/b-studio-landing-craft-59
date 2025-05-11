@@ -8,7 +8,7 @@ interface HeroProps {
   subtitle: string;
   ctaText: string;
   ctaLink: string;
-  backgroundImage?: string;
+  backgroundImage: string;
 }
 
 const Hero: React.FC<HeroProps> = ({
@@ -16,44 +16,35 @@ const Hero: React.FC<HeroProps> = ({
   subtitle,
   ctaText,
   ctaLink,
-  backgroundImage = "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+  backgroundImage,
 }) => {
-  return (
-    <div className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Enhanced gradient overlay with more appealing colors */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-bstudio-primary/70 via-bstudio-secondary/60 to-purple-400/50 opacity-85"></div>
-      
-      {/* Background image with better opacity */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
-        style={{ backgroundImage: `url('${backgroundImage}')` }}
-      ></div>
+  const heroStyle = {
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+  };
 
-      <div className="container max-w-7xl mx-auto px-4 z-10">
-        <div className="flex flex-col items-end text-right max-w-3xl ml-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 animate-fade-in shadow-text">
+  return (
+    <section 
+      className="hero-section min-h-[80vh] bg-cover bg-center bg-no-repeat flex items-center text-white relative"
+      style={heroStyle}
+    >
+      <div className="container max-w-7xl mx-auto px-4 py-16">
+        <div className="max-w-3xl text-right mr-auto">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             {title}
           </h1>
-          <p className="text-lg md:text-xl text-white/90 mb-8 animate-fade-in shadow-text" style={{ animationDelay: "0.2s" }}>
+          <p className="text-xl md:text-2xl mb-8 text-white/90">
             {subtitle}
           </p>
-          <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <div>
             <Link to={ctaLink}>
-              <Button size="lg" className="bg-white text-bstudio-primary hover:bg-white/90 hover:shadow-lg transition-all">
+              <Button size="lg" className="bg-white text-bstudio-primary hover:bg-white/90">
                 {ctaText}
               </Button>
             </Link>
           </div>
         </div>
       </div>
-
-      {/* Enhanced decorative elements with softer colors */}
-      <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-background to-transparent"></div>
-      <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl"></div>
-      <div className="absolute -top-10 -right-10 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"></div>
-      <div className="absolute top-1/3 left-1/4 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-      <div className="absolute top-2/3 right-1/4 w-24 h-24 bg-blue-300/15 rounded-full blur-xl"></div>
-    </div>
+    </section>
   );
 };
 
