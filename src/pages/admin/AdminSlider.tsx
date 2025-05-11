@@ -274,8 +274,9 @@ const AdminSlider = () => {
               <Label>תמונה</Label>
               <div className="mt-2">
                 <ImageUpload 
-                  currentImageUrl={imageUrl} 
-                  onImageUploaded={handleImageUpload}
+                  currentImage={imageUrl} 
+                  onImageSelected={handleImageUpload}
+                  label="תמונת הסליידר"
                 />
               </div>
             </div>
