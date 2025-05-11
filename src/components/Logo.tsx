@@ -32,3 +32,6 @@ const Logo: React.FC<LogoProps> = ({ className }) => {
       )}
     </Link>
   );
+};
+
+export default Logo;
