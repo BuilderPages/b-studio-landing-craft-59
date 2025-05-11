@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,11 +17,14 @@ import AdminContent from "./pages/admin/AdminContent";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminHomeGallery from "./pages/admin/AdminHomeGallery";
 import AdminBackups from "./pages/admin/AdminBackups";
+import AdminSettings from "@/pages/admin/AdminSettings";
+import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
 import AccessibilityWidget from "./components/AccessibilityWidget";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+function App() {
   // Add RTL direction to the document for Hebrew support
   useEffect(() => {
     document.documentElement.dir = "rtl";
@@ -41,19 +43,77 @@ const App = () => {
           
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/accessibility" element={<AccessibilityStatement />} />
             
             {/* Admin Routes */}
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/contacts" element={<AdminContacts />} />
-            <Route path="/admin/gallery" element={<AdminGallery />} />
-            <Route path="/admin/content" element={<AdminContent />} />
-            <Route path="/admin/analytics" element={<AdminAnalytics />} />
-            <Route path="/admin/home-gallery" element={<AdminHomeGallery />} />
-            <Route path="/admin/backups" element={<AdminBackups />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <AdminAuthGuard>
+                  <AdminDashboard />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/analytics"
+              element={
+                <AdminAuthGuard>
+                  <AdminAnalytics />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/contacts"
+              element={
+                <AdminAuthGuard>
+                  <AdminContacts />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/content"
+              element={
+                <AdminAuthGuard>
+                  <AdminContent />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/gallery"
+              element={
+                <AdminAuthGuard>
+                  <AdminGallery />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/home-gallery"
+              element={
+                <AdminAuthGuard>
+                  <AdminHomeGallery />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/backups"
+              element={
+                <AdminAuthGuard>
+                  <AdminBackups />
+                </AdminAuthGuard>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <AdminAuthGuard>
+                  <AdminSettings />
+                </AdminAuthGuard>
+              }
+            />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
@@ -65,6 +125,6 @@ const App = () => {
       </TooltipProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;

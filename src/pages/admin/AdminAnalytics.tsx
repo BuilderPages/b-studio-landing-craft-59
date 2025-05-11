@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { getPageViews } from "@/services/database";
@@ -15,6 +14,13 @@ interface BannedIP {
   date: Date;
 }
 
+interface OnlineUser {
+  ip: string;
+  lastActivity: Date;
+  device: string;
+  browser: string;
+}
+
 const AdminAnalytics = () => {
   const [pageViews, setPageViews] = useState(getPageViews());
   const [bannedIPs, setBannedIPs] = useState<BannedIP[]>(() => {
@@ -22,7 +28,7 @@ const AdminAnalytics = () => {
     return saved ? JSON.parse(saved) : [];
   });
   const [ipToBlock, setIpToBlock] = useState("");
-  const [onlineUsers, setOnlineUsers] = useState<{[key: string]: Date}>({});
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   
   useEffect(() => {
     // Refresh data every 60 seconds
@@ -41,27 +47,27 @@ const AdminAnalytics = () => {
       const now = new Date();
       const activeTimeWindow = 5 * 60 * 1000; // 5 minutes in milliseconds
       
-      // Clean up old users
-      const stillOnline = { ...onlineUsers };
-      for (const ip in stillOnline) {
-        if (now.getTime() - new Date(stillOnline[ip]).getTime() > activeTimeWindow) {
-          delete stillOnline[ip];
-        }
-      }
-      
-      // Add some random active users for demo purposes
+      // Get recent visitors
       const recentVisitors = pageViews
         .filter(view => !bannedIPs.some(banned => banned.ip === view.ip))
         .slice(-20);
       
+      // Generate online users with device and browser info
+      const onlineUsersList: OnlineUser[] = [];
+      
       // Randomly select some visitors as "online"
       recentVisitors.forEach(visitor => {
         if (Math.random() > 0.7) { // 30% chance to be "online"
-          stillOnline[visitor.ip] = new Date();
+          onlineUsersList.push({
+            ip: visitor.ip || '0.0.0.0',
+            lastActivity: new Date(),
+            device: visitor.device || 'Unknown',
+            browser: visitor.browser || 'Unknown'
+          });
         }
       });
       
-      setOnlineUsers(stillOnline);
+      setOnlineUsers(onlineUsersList);
     };
     
     simulateOnlineUsers();
@@ -71,7 +77,7 @@ const AdminAnalytics = () => {
       clearInterval(interval);
       clearInterval(onlineInterval);
     };
-  }, [bannedIPs]);
+  }, [bannedIPs, pageViews]);
 
   // Save banned IPs to local storage
   useEffect(() => {
@@ -164,7 +170,7 @@ const AdminAnalytics = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{Object.keys(onlineUsers).length}</div>
+                  <div className="text-3xl font-bold">{onlineUsers.length}</div>
                 </CardContent>
               </Card>
             </div>
@@ -358,20 +364,24 @@ const AdminAnalytics = () => {
                         <TableRow>
                           <TableHead>כתובת IP</TableHead>
                           <TableHead>פעילות אחרונה</TableHead>
+                          <TableHead>מכשיר</TableHead>
+                          <TableHead>דפדפן</TableHead>
                           <TableHead>פעולות</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {Object.keys(onlineUsers).length > 0 ? (
-                          Object.keys(onlineUsers).map((ip) => (
-                            <TableRow key={ip}>
-                              <TableCell>{ip}</TableCell>
-                              <TableCell>{new Date(onlineUsers[ip]).toLocaleTimeString()}</TableCell>
+                        {onlineUsers.length > 0 ? (
+                          onlineUsers.map((user, index) => (
+                            <TableRow key={`${user.ip}-${index}`}>
+                              <TableCell>{user.ip}</TableCell>
+                              <TableCell>{new Date(user.lastActivity).toLocaleTimeString()}</TableCell>
+                              <TableCell>{user.device}</TableCell>
+                              <TableCell>{user.browser}</TableCell>
                               <TableCell>
                                 <Button 
                                   variant="destructive" 
                                   size="sm"
-                                  onClick={() => banIP(ip)}
+                                  onClick={() => banIP(user.ip)}
                                 >
                                   חסום IP
                                 </Button>
@@ -380,7 +390,7 @@ const AdminAnalytics = () => {
                           ))
                         ) : (
                           <TableRow>
-                            <TableCell colSpan={3} className="text-center text-muted-foreground">
+                            <TableCell colSpan={5} className="text-center text-muted-foreground">
                               אין משתמשים מחוברים כרגע
                             </TableCell>
                           </TableRow>

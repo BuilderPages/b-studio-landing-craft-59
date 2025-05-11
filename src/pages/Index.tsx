@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HomeGallery from "@/components/HomeGallery";
 import ContactForm from "@/components/ContactForm";
+import WorksSlider from "@/components/WorksSlider";  // Import our new component
 import { getSiteContent, recordPageView } from "@/services/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,14 @@ const Index = () => {
           backgroundImage={content.heroBackgroundImage || "https://images.unsplash.com/photo-1493397212122-2b85dda8106b"}
         />
         <ServicesSection />
+        
+        {/* New Works Slider */}
+        <WorksSlider 
+          autoplaySpeed={5000}
+          title="עבודות לדוגמא"
+          maxWorks={10}
+        />
+        
         <HomeGallery 
           autoplayInterval={5000}
         />
