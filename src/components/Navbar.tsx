@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "@/components/ui/button";
 import { getSiteContent, getNavigation } from "@/services/database";
@@ -20,6 +20,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navItems, setNavItems] = useState(defaultNavItems);
   const siteContent = getSiteContent();
+  const location = useLocation();
 
   // Fetch navigation data and update state when it changes
   useEffect(() => {
@@ -49,12 +50,17 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+  
+  // Check if we're on homepage
+  const isHomePage = location.pathname === "/";
+  // Determine if navbar should be transparent or solid
+  const isTransparent = isHomePage && !scrolled;
 
   return (
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled || document.location.pathname !== "/" ? "bg-white shadow-md py-3" : "bg-transparent py-6"
+        isTransparent ? "bg-transparent py-6" : "bg-white shadow-md py-3"
       )}
     >
       <div className="container max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -70,13 +76,13 @@ const Navbar = () => {
               to={item.url}
               className={cn(
                 "text-lg transition-colors mx-2", // Added mx-2 for spacing
-                scrolled || document.location.pathname !== "/"
+                isTransparent
                   ? item.highlight
+                    ? "text-white font-medium"
+                    : "text-white/90 hover:text-white"
+                  : item.highlight
                     ? "text-bstudio-primary font-medium"
                     : "text-gray-700 hover:text-bstudio-primary"
-                  : item.highlight
-                  ? "text-white font-medium"
-                  : "text-white/90 hover:text-white"
               )}
             >
               {item.label}
@@ -87,7 +93,7 @@ const Navbar = () => {
               size="lg"
               className={cn(
                 "bg-bstudio-primary hover:bg-bstudio-primary/90 text-white",
-                scrolled ? "shadow-sm" : "shadow-lg"
+                isTransparent ? "shadow-lg" : "shadow-sm"
               )}
             >
               צור קשר
@@ -104,7 +110,7 @@ const Navbar = () => {
           <Menu 
             className={cn(
               "w-8 h-8",
-              scrolled || document.location.pathname !== "/" ? "text-gray-800" : "text-white"
+              isTransparent ? "text-white" : "text-gray-800"
             )}
           />
         </button>

@@ -64,6 +64,18 @@ const ServicesPage = () => {
         </svg>
       ),
     },
+    {
+      id: 6,
+      title: 'פתרונות דיגיטליים',
+      description: 'אינטגרציה של מערכות דיגיטליות, ניהול תוכן וטכנולוגיות מתקדמות.',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 16l-8-8-8 8"></path>
+          <path d="M4 4v16"></path>
+          <path d="M20 20H4"></path>
+        </svg>
+      ),
+    },
   ];
 
   return (
