@@ -2,12 +2,15 @@
 import React from "react";
 import { getSiteContent } from "@/services/database";
 import Hero from "@/components/Hero";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const AboutPage = () => {
   const content = getSiteContent();
 
   return (
     <div>
+      <Navbar />
       <Hero 
         title={content.aboutTitle || "אודות"}
         subtitle={content.aboutText || "קצת עלינו ועל הדרך שלנו"}
@@ -76,6 +79,7 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

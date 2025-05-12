@@ -53,13 +53,13 @@ const Navbar = () => {
   
   // Check if we're on homepage
   const isHomePage = location.pathname === "/";
-  // Determine if navbar should be transparent or solid
+  // Only use transparent background on homepage and when not scrolled
   const isTransparent = isHomePage && !scrolled;
 
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full",
         isTransparent ? "bg-transparent py-6" : "bg-white shadow-md py-3"
       )}
     >
@@ -75,7 +75,7 @@ const Navbar = () => {
               key={item.id}
               to={item.url}
               className={cn(
-                "text-lg transition-colors mx-2", // Added mx-2 for spacing
+                "text-lg transition-colors mx-2",
                 isTransparent
                   ? item.highlight
                     ? "text-white font-medium"

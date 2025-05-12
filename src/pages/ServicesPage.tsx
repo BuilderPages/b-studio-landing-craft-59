@@ -2,6 +2,8 @@
 import React from "react";
 import { getSiteContent } from "@/services/database";
 import Hero from "@/components/Hero";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const ServicesPage = () => {
   const content = getSiteContent();
@@ -80,6 +82,7 @@ const ServicesPage = () => {
 
   return (
     <div>
+      <Navbar />
       <Hero 
         title={content.servicesTitle || "השירותים שלנו"}
         subtitle={content.servicesDescription || "אנחנו מציעים מגוון רחב של שירותים בתחום העיצוב והמדיה"}
@@ -135,6 +138,7 @@ const ServicesPage = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
