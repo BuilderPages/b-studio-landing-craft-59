@@ -1,4 +1,3 @@
-
 export interface Contact {
   id: string;
   name: string;
@@ -60,6 +59,11 @@ export interface SiteContent {
   primaryColor?: string;
   secondaryColor?: string;
   accentColor?: string;
+  mapSettings: {
+    showMap: boolean;
+    latitude: string;
+    longitude: string;
+  };
 }
 
 export interface FooterContent {
@@ -225,6 +229,12 @@ if (!localStorage.getItem('siteContent')) {
     primaryColor: '#9b87f5',
     secondaryColor: '#7E69AB',
     accentColor: '#6E59A5',
+    // Add mapSettings
+    mapSettings: {
+      showMap: true,
+      latitude: "32.07373882655249",
+      longitude: "34.77084541524799"
+    }
   };
   localStorage.setItem('siteContent', JSON.stringify(defaultContent));
 }
@@ -327,6 +337,12 @@ export function getSiteContent(): SiteContent {
     primaryColor: '#9b87f5',
     secondaryColor: '#7E69AB',
     accentColor: '#6E59A5',
+    // Add default mapSettings
+    mapSettings: {
+      showMap: true,
+      latitude: "32.07373882655249",
+      longitude: "34.77084541524799"
+    }
   };
 }
 
@@ -360,7 +376,7 @@ export function getFooterContent(): FooterContent {
     quickLinks: [
       { label: 'דף בית', url: '/' },
       { label: 'אודות', url: '/about' },
-      { label: 'גלריה', url: '/gallery' },
+      { label: 'גלריה', url: '/about' },
     ],
     servicesTitle: 'שירותים',
     serviceLinks: [

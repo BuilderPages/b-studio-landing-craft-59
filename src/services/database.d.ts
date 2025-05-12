@@ -24,7 +24,7 @@ export interface SiteContent {
     instagram: string;
     linkedin: string;
   };
-  mapSettings?: MapSettings;
+  mapSettings: MapSettings;
 }
 
 export interface GalleryItem {
