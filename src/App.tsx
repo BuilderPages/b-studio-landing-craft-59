@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 import Index from "./pages/Index";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
@@ -35,16 +35,16 @@ function App() {
         
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route element={<AdminAuthGuard />}>
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/contacts" element={<AdminContacts />} />
-          <Route path="/admin/gallery" element={<AdminGallery />} />
-          <Route path="/admin/content" element={<AdminContent />} />
-          <Route path="/admin/analytics" element={<AdminAnalytics />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
-          <Route path="/admin/backups" element={<AdminBackups />} />
-          <Route path="/admin/home-gallery" element={<AdminHomeGallery />} />
-          <Route path="/admin/slider" element={<AdminSlider />} />
+        <Route path="/admin" element={<AdminAuthGuard><Outlet /></AdminAuthGuard>}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="contacts" element={<AdminContacts />} />
+          <Route path="gallery" element={<AdminGallery />} />
+          <Route path="content" element={<AdminContent />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="backups" element={<AdminBackups />} />
+          <Route path="home-gallery" element={<AdminHomeGallery />} />
+          <Route path="slider" element={<AdminSlider />} />
         </Route>
         
         <Route path="*" element={<NotFound />} />
