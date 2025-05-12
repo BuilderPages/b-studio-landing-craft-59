@@ -21,6 +21,8 @@ interface AdminSiteContent {
   heroCtaText: string;
   heroCtaLink: string;
   heroBackgroundImage: string;
+  heroOverlayColor?: string;
+  heroOverlayOpacity?: string;
   ctaTitle: string;
   ctaDescription: string;
   ctaButtonText: string;
@@ -109,6 +111,8 @@ const AdminContent = () => {
       heroCtaText: siteContent.heroCtaText || '',
       heroCtaLink: siteContent.heroCtaLink || '',
       heroBackgroundImage: siteContent.heroBackgroundImage || '',
+      heroOverlayColor: siteContent.heroOverlayColor || '0, 0, 0',
+      heroOverlayOpacity: siteContent.heroOverlayOpacity || '0.4',
       ctaTitle: siteContent.ctaTitle || '',
       ctaDescription: siteContent.ctaDescription || '',
       ctaButtonText: siteContent.ctaButtonText || '',
@@ -275,6 +279,12 @@ const AdminContent = () => {
     return replaceYearPlaceholder(content.footerText);
   };
 
+  // Modified to handle RGB color for banner overlay
+  const handleRgbColorChange = (rgbColor: { r: number; g: number; b: number }) => {
+    const rgbString = `${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}`;
+    handleContentChange('heroOverlayColor', rgbString);
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -390,6 +400,81 @@ const AdminContent = () => {
                       currentImage={content.heroBackgroundImage || ""}
                       label="העלאת תמונת רקע"
                     />
+                    
+                    {/* New Banner Background Controls */}
+                    <div className="pt-4 border-t">
+                      <h3 className="text-lg font-medium mb-4">הגדרות רקע באנר</h3>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-md font-medium">צבע שכבת רקע</h4>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="outline" className="w-full justify-between mt-2">
+                                <span>בחירת צבע</span>
+                                <div 
+                                  className="h-4 w-6 rounded-full" 
+                                  style={{ 
+                                    backgroundColor: `rgba(${content.heroOverlayColor || "0, 0, 0"}, 1)` 
+                                  }}
+                                />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                              <SketchPicker 
+                                color={
+                                  (() => {
+                                    const rgbParts = (content.heroOverlayColor || "0, 0, 0").split(",").map(p => parseInt(p.trim()));
+                                    return { r: rgbParts[0], g: rgbParts[1], b: rgbParts[2] };
+                                  })()
+                                }
+                                onChange={(color) => handleRgbColorChange(color.rgb)}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <p className="text-sm text-gray-500 mt-1 text-right">
+                            בחר צבע לשכבת הרקע שמעל תמונת הבאנר
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-md font-medium">שקיפות שכבת הרקע</h4>
+                          <div className="flex items-center gap-2 mt-2">
+                            <span>שקוף</span>
+                            <input 
+                              type="range" 
+                              min="0" 
+                              max="1" 
+                              step="0.05" 
+                              value={content.heroOverlayOpacity || "0.4"}
+                              onChange={(e) => handleContentChange('heroOverlayOpacity', e.target.value)}
+                              className="w-full"
+                            />
+                            <span>אטום</span>
+                          </div>
+                          <p className="text-sm text-gray-500 mt-1 text-right">
+                            שליטה ברמת השקיפות של שכבת הרקע (ערך נמוך = יותר שקוף)
+                          </p>
+                          
+                          {/* Preview */}
+                          <div 
+                            className="mt-4 p-6 rounded-md text-white text-center font-bold relative overflow-hidden"
+                            style={{ backgroundImage: `url(${content.heroBackgroundImage || "https://images.unsplash.com/photo-1493397212122-2b85dda8106b"})`, backgroundSize: 'cover', height: '100px' }}
+                          >
+                            <div 
+                              style={{ 
+                                position: 'absolute', 
+                                inset: 0, 
+                                backgroundColor: `rgba(${content.heroOverlayColor || "0, 0, 0"}, ${content.heroOverlayOpacity || "0.4"})`
+                              }}
+                            ></div>
+                            <div className="relative z-10 flex items-center justify-center h-full">
+                              תצוגה מקדימה של הבאנר
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   
                   <div className="pt-6 border-t">

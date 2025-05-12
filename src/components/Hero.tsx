@@ -2,6 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { getSiteContent } from "@/services/database";
 
 interface HeroProps {
   title: string;
@@ -18,8 +19,30 @@ const Hero: React.FC<HeroProps> = ({
   ctaLink,
   backgroundImage,
 }) => {
+  const siteContent = getSiteContent();
+  // Get overlay opacity from site content or use a default value
+  const overlayOpacity = siteContent.heroOverlayOpacity || "0.4";
+  // Get custom background color or use default
+  const overlayColor = siteContent.heroOverlayColor || "0, 0, 0"; // RGB format
+
   const heroStyle = {
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+    backgroundImage: `url(${backgroundImage})`,
+    position: "relative" as const,
+  };
+
+  const overlayStyle = {
+    position: "absolute" as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: `rgba(${overlayColor}, ${overlayOpacity})`,
+    zIndex: 1,
+  };
+
+  const contentStyle = {
+    position: "relative" as const,
+    zIndex: 2,
   };
 
   return (
@@ -27,7 +50,8 @@ const Hero: React.FC<HeroProps> = ({
       className="hero-section min-h-[80vh] bg-cover bg-center bg-no-repeat flex items-center text-white relative"
       style={heroStyle}
     >
-      <div className="container max-w-7xl mx-auto px-4 py-16">
+      <div style={overlayStyle}></div>
+      <div className="container max-w-7xl mx-auto px-4 py-16" style={contentStyle}>
         <div className="max-w-3xl text-right mr-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             {title}
