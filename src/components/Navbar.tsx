@@ -54,7 +54,7 @@ const Navbar = () => {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "bg-white shadow-md py-3" : "bg-transparent py-6"
+        scrolled || document.location.pathname !== "/" ? "bg-white shadow-md py-3" : "bg-transparent py-6"
       )}
     >
       <div className="container max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -70,7 +70,7 @@ const Navbar = () => {
               to={item.url}
               className={cn(
                 "text-lg transition-colors mx-2", // Added mx-2 for spacing
-                scrolled
+                scrolled || document.location.pathname !== "/"
                   ? item.highlight
                     ? "text-bstudio-primary font-medium"
                     : "text-gray-700 hover:text-bstudio-primary"
@@ -104,7 +104,7 @@ const Navbar = () => {
           <Menu 
             className={cn(
               "w-8 h-8",
-              scrolled ? "text-gray-800" : "text-white"
+              scrolled || document.location.pathname !== "/" ? "text-gray-800" : "text-white"
             )}
           />
         </button>
