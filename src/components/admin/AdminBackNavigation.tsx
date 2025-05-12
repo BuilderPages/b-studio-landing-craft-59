@@ -1,18 +1,13 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 interface AdminBackNavigationProps {
   title: string;
-  backTo?: string;
 }
 
 const AdminBackNavigation: React.FC<AdminBackNavigationProps> = ({
-  title,
-  backTo = "/admin/dashboard",
+  title
 }) => {
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center md:justify-between mb-6">
       <div className="mb-4 md:mb-0">

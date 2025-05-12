@@ -17,6 +17,7 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import AdminBackups from "./pages/admin/AdminBackups";
 import AdminHomeGallery from "./pages/admin/AdminHomeGallery";
 import AdminSlider from "./pages/admin/AdminSlider";
+import AdminMapSettings from "./pages/admin/AdminMapSettings";
 import AdminAuthGuard from "./components/admin/AdminAuthGuard";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -45,6 +46,7 @@ function App() {
           <Route path="backups" element={<AdminBackups />} />
           <Route path="home-gallery" element={<AdminHomeGallery />} />
           <Route path="slider" element={<AdminSlider />} />
+          <Route path="map-settings" element={<AdminMapSettings />} />
         </Route>
         
         <Route path="*" element={<NotFound />} />

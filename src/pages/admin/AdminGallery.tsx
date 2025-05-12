@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { getGalleryItems, saveGalleryItem, deleteGalleryItem, GalleryItem } from "@/services/database";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,39 @@ import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import AdminBackNavigation from "@/components/admin/AdminBackNavigation";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { v4 as uuidv4 } from "uuid";
+
+// Sample gallery items
+const sampleGalleryItems: GalleryItem[] = [
+  {
+    id: "sample-1",
+    title: "עיצוב לוגו לחברת טכנולוגיה",
+    category: "לוגואים",
+    imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    description: "עיצוב לוגו מינימליסטי המשלב אלמנטים טכנולוגיים עם פונט מודרני. נוצר עבור חברת סטארט-אפ בתחום הסייבר."
+  },
+  {
+    id: "sample-2",
+    title: "באנר לקמפיין שיווקי",
+    category: "באנרים",
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+    description: "סדרת באנרים עבור קמפיין שיווקי ברשתות חברתיות. עיצוב נקי שמדגיש את המסר העיקרי ומאפשר שמירה על זהות המותג."
+  },
+  {
+    id: "sample-3",
+    title: "מיתוג לחנות אופנה",
+    category: "מיתוג",
+    imageUrl: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+    description: "מיתוג מלא לחנות אופנה הכולל לוגו, כרטיסי ביקור, שלטים וחומרי מדיה חברתית בסגנון מודרני וייחודי."
+  },
+  {
+    id: "sample-4",
+    title: "דף נחיתה לאפליקציה",
+    category: "דפי נחיתה",
+    imageUrl: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    description: "עיצוב דף נחיתה לאפליקציית מובייל חדשה. העיצוב מדגיש את היתרונות העיקריים של האפליקציה ומשלב קריאות לפעולה ברורות."
+  },
+];
 
 const AdminGallery = () => {
   const { toast } = useToast();
@@ -25,7 +58,21 @@ const AdminGallery = () => {
   });
 
   // Categories for dropdown
-  const categories = ["לוגואים", "דפי נחיתה", "ניהול תוכן", "מיתוג"];
+  const categories = ["לוגואים", "באנרים", "דפי נחיתה", "מיתוג", "עיצוב גרפי", "ניהול תוכן"];
+
+  useEffect(() => {
+    // If no gallery items exist, add sample items
+    const existingItems = getGalleryItems();
+    if (existingItems.length === 0) {
+      sampleGalleryItems.forEach(item => {
+        saveGalleryItem({
+          ...item,
+          id: uuidv4() // Generate unique IDs for sample items
+        });
+      });
+      setGalleryItems(getGalleryItems());
+    }
+  }, []);
 
   const handleRefresh = () => {
     setGalleryItems(getGalleryItems());

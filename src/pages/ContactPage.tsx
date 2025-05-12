@@ -7,6 +7,7 @@ import { saveContact, getSiteContent, recordPageView } from "@/services/database
 
 const ContactPage = () => {
   const content = getSiteContent();
+  const mapSettings = content.mapSettings || { showMap: true };
 
   useEffect(() => {
     // Record page view for analytics
@@ -29,6 +30,11 @@ const ContactPage = () => {
       message: formData.message || "", // Ensure message is provided
     });
   };
+
+  // Generate Google Maps embed URL with the settings
+  const googleMapsEmbedUrl = content.mapSettings ? 
+    `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3381.6707349998197!2d${content.mapSettings.longitude || "34.77084541524799"}!3d${content.mapSettings.latitude || "32.07373882655249"}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151d4b7bc570b9e5%3A0x37e3c136c6028c0a!2z16jXl9eV15Eg15TXqNem15wgNTAsINeq15wg15DXkdeZ15E!5e0!3m2!1siw!2sil!4v1715128055447!5m2!1siw!2sil` :
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3381.6707349998197!2d34.77084541524799!3d32.07373882655249!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151d4b7bc570b9e5%3A0x37e3c136c6028c0a!2z16jXl9eV15Eg15TXqNem15wgNTAsINeq15wg15DXkdeZ15E!5e0!3m2!1siw!2sil!4v1715128055447!5m2!1siw!2sil";
 
   return (
     <div className="min-h-screen">
@@ -83,20 +89,22 @@ const ContactPage = () => {
                 </div>
               </div>
               
-              <div>
-                <h3 className="text-xl font-bold mb-4">מפה</h3>
-                <div className="aspect-video rounded-lg overflow-hidden shadow-md">
-                  <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3381.6707349998197!2d34.77084541524799!3d32.07373882655249!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151d4b7bc570b9e5%3A0x37e3c136c6028c0a!2z16jXl9eV15Eg15TXqNem15wgNTAsINeq15wg15DXkdeZ15E!5e0!3m2!1siw!2sil!4v1715128055447!5m2!1siw!2sil" 
-                    width="100%" 
-                    height="100%" 
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade">
-                  </iframe>
+              {mapSettings.showMap && (
+                <div>
+                  <h3 className="text-xl font-bold mb-4">מפה</h3>
+                  <div className="aspect-video rounded-lg overflow-hidden shadow-md">
+                    <iframe 
+                      src={googleMapsEmbedUrl}
+                      width="100%" 
+                      height="100%" 
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy" 
+                      referrerPolicy="no-referrer-when-downgrade">
+                    </iframe>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
