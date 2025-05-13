@@ -12,15 +12,24 @@ export interface MapSettings {
 }
 
 export interface SiteContent {
+  // Site-wide settings
   siteName: string;
   siteDescription: string;
   heroOverlayColor: string;
   heroOverlayOpacity: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
   
+  // About section
   aboutTitle: string;
   aboutText: string;
+  
+  // Services section
   servicesTitle: string;
   servicesText: string;
+  
+  // Contact information
   contactInfo: ContactInfo;
   social: {
     facebook: string;
@@ -28,6 +37,7 @@ export interface SiteContent {
     linkedin: string;
   };
   mapSettings: MapSettings;
+  
   // Home page specific fields
   homePage?: {
     heroTitle: string;
@@ -35,30 +45,31 @@ export interface SiteContent {
     aboutUsTitle: string;
     aboutUsDescription: string;
   };
+  
   // Banner and hero section
   heroTitle: string;
   heroSubtitle: string;
   heroCtaText: string;
   heroCtaLink: string;
   heroBackgroundImage: string;
+  
   // CTA section
   ctaTitle: string;
   ctaDescription: string;
   ctaButtonText: string;
   ctaButtonLink: string;
   videoUrl: string;
+  
   // Gallery section
   galleryTitle: string;
   galleryDescription: string;
   galleryCtaText: string;
   galleryCtaLink: string;
+  
   // Other content
   footerText: string;
   logoUrl?: string;
   logoLink?: string;
-  primaryColor?: string;
-  secondaryColor?: string;
-  accentColor?: string;
 }
 
 export interface GalleryItem {
