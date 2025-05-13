@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import HomeGallery from "@/components/HomeGallery";
 import ContactForm from "@/components/ContactForm";
 import WorksSlider from "@/components/WorksSlider";
+import PageMeta from "@/components/PageMeta";
 import { getSiteContent, recordPageView } from "@/services/database";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <PageMeta 
+        title="דף הבית" 
+        description={content.siteDescription}
+        keywords="עיצוב, עיצוב אתרים, בניית אתרים, שיווק דיגיטלי"
+      />
       <Navbar />
       <main>
         <Hero 
@@ -40,7 +46,7 @@ const Index = () => {
         />
         <ServicesSection />
         
-        {/* New Works Slider */}
+        {/* Works Slider */}
         <WorksSlider 
           autoplaySpeed={5000}
           title="עבודות לדוגמא"

@@ -49,8 +49,9 @@ const Hero: React.FC<HeroProps> = ({
     <section 
       className="hero-section min-h-[80vh] bg-cover bg-center bg-no-repeat flex items-center text-white relative"
       style={heroStyle}
+      aria-label="Hero Banner"
     >
-      <div style={overlayStyle}></div>
+      <div style={overlayStyle} aria-hidden="true"></div>
       <div className="container max-w-7xl mx-auto px-4 py-16" style={contentStyle}>
         <div className="max-w-3xl text-right mr-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
