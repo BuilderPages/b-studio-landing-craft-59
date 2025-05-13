@@ -1,3 +1,4 @@
+
 export interface ContactInfo {
   phone: string;
   email: string;
@@ -38,8 +39,8 @@ export interface SiteContent {
   heroCtaText: string;
   heroCtaLink: string;
   heroBackgroundImage: string;
-  heroOverlayColor: string;  
-  heroOverlayOpacity: string;
+  heroOverlayColor: string;  // Added missing property
+  heroOverlayOpacity: string;  // Added missing property
   // CTA section
   ctaTitle: string;
   ctaDescription: string;
