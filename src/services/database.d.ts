@@ -39,8 +39,8 @@ export interface SiteContent {
   heroCtaText: string;
   heroCtaLink: string;
   heroBackgroundImage: string;
-  heroOverlayColor: string;  // Added this property
-  heroOverlayOpacity: string;  // Added this property
+  heroOverlayColor: string;  
+  heroOverlayOpacity: string;
   // CTA section
   ctaTitle: string;
   ctaDescription: string;
