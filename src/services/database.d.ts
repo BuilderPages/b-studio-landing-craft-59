@@ -1,4 +1,3 @@
-
 export interface ContactInfo {
   phone: string;
   email: string;
@@ -15,6 +14,9 @@ export interface MapSettings {
 export interface SiteContent {
   siteName: string;
   siteDescription: string;
+  heroOverlayColor: string;
+  heroOverlayOpacity: string;
+  
   aboutTitle: string;
   aboutText: string;
   servicesTitle: string;
@@ -39,8 +41,6 @@ export interface SiteContent {
   heroCtaText: string;
   heroCtaLink: string;
   heroBackgroundImage: string;
-  heroOverlayColor: string;
-  heroOverlayOpacity: string;
   // CTA section
   ctaTitle: string;
   ctaDescription: string;
