@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from "react";
 
-// Define ToastType to include "destructive" to match shadcn/ui toast variant
-export type ToastType = "default" | "success" | "error" | "warning" | "info" | "destructive";
+// Define ToastType to exactly match what the toast component expects
+export type ToastType = "default" | "destructive";
 
 export interface ToastOptions {
   title?: string;

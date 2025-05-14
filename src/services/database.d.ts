@@ -27,11 +27,12 @@ export interface SiteContent {
   
   // Services section
   servicesTitle: string;
-  servicesText: string;
+  servicesText?: string;
+  servicesDescription?: string;
   
   // Contact information
   contactInfo: ContactInfo;
-  social: {
+  social?: {
     facebook: string;
     instagram: string;
     linkedin: string;
@@ -39,7 +40,7 @@ export interface SiteContent {
   mapSettings: MapSettings;
   
   // Home page specific fields
-  homePage?: {
+  homePage: {
     heroTitle: string;
     heroSubtitle: string;
     aboutUsTitle: string;
