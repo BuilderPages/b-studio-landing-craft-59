@@ -9,7 +9,7 @@ import { Menu } from "lucide-react";
 
 // Default navigation items in case database doesn't provide them
 const defaultNavItems = [
-  { id: "1", label: "בית", url: "/", highlight: false },
+  { id: "1", label: "דף הבית", url: "/", highlight: false },
   { id: "2", label: "שירותים", url: "/services", highlight: false },
   { id: "3", label: "עבודות", url: "/gallery", highlight: false },
   { id: "4", label: "אודות", url: "/about", highlight: false },
@@ -69,36 +69,38 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          {navItems.map((item) => (
-            <Link
-              key={item.id}
-              to={item.url}
-              className={cn(
-                "text-lg transition-colors mx-2",
-                isTransparent
-                  ? item.highlight
-                    ? "text-white font-medium"
-                    : "text-white/90 hover:text-white"
-                  : item.highlight
-                    ? "text-bstudio-primary font-medium"
-                    : "text-gray-700 hover:text-bstudio-primary"
-              )}
-            >
-              {item.label}
+        <nav className="hidden md:flex items-center">
+          <div className="flex items-center justify-center space-x-0">
+            {navItems.map((item) => (
+              <Link
+                key={item.id}
+                to={item.url}
+                className={cn(
+                  "text-lg transition-colors px-4",
+                  isTransparent
+                    ? item.highlight
+                      ? "text-white font-medium"
+                      : "text-white/90 hover:text-white"
+                    : item.highlight
+                      ? "text-bstudio-primary font-medium"
+                      : "text-gray-700 hover:text-bstudio-primary"
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link to="/contact" className="px-4">
+              <Button
+                size="lg"
+                className={cn(
+                  "bg-bstudio-primary hover:bg-bstudio-primary/90 text-white",
+                  isTransparent ? "shadow-lg" : "shadow-sm"
+                )}
+              >
+                צור קשר
+              </Button>
             </Link>
-          ))}
-          <Link to="/contact">
-            <Button
-              size="lg"
-              className={cn(
-                "bg-bstudio-primary hover:bg-bstudio-primary/90 text-white",
-                isTransparent ? "shadow-lg" : "shadow-sm"
-              )}
-            >
-              צור קשר
-            </Button>
-          </Link>
+          </div>
         </nav>
 
         {/* Mobile Menu Button */}
