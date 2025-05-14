@@ -119,6 +119,23 @@
       filter: grayscale(100%);
     }
   }
+  
+  /* Additional accessibility overrides for forced colors mode */
+  :focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
+  
+  a {
+    color: LinkText !important;
+  }
+  
+  button, .button, [role="button"] {
+    forced-color-adjust: none;
+    color: ButtonText !important;
+    background-color: ButtonFace !important;
+    border: 1px solid ButtonText !important;
+  }
 }
 
 .hero-gradient {

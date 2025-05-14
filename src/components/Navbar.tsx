@@ -64,13 +64,18 @@ const Navbar = () => {
       )}
     >
       <div className="container max-w-7xl mx-auto px-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center">
+        <Link 
+          to="/" 
+          className="flex items-center"
+          aria-label="לוגו - דף הבית" 
+          title="דף הבית"
+        >
           <Logo />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center">
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center space-x-reverse space-x-6">
             {navItems.map((item) => (
               <Link
                 key={item.id}
@@ -91,13 +96,20 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
-            <Link to="/contact" className="mx-1" aria-label="צור קשר" title="צור קשר">
+            <Link 
+              to="/contact" 
+              className="mr-2" 
+              aria-label="צור קשר" 
+              title="צור קשר"
+            >
               <Button
                 size="lg"
                 className={cn(
                   "bg-bstudio-primary hover:bg-bstudio-primary/90 text-white",
                   isTransparent ? "shadow-lg" : "shadow-sm"
                 )}
+                aria-label="צור קשר"
+                title="צור קשר"
               >
                 צור קשר
               </Button>
@@ -152,6 +164,8 @@ const Navbar = () => {
                 <Button 
                   size="lg" 
                   className="bg-bstudio-primary hover:bg-bstudio-primary/90 text-white shadow-sm"
+                  aria-label="צור קשר"
+                  title="צור קשר"
                 >
                   צור קשר
                 </Button>
