@@ -22,6 +22,12 @@ export interface PageView {
 }
 
 export interface SiteContent {
+  // Site-wide settings
+  siteName: string;
+  siteDescription: string;
+  heroOverlayColor: string;
+  heroOverlayOpacity: string;
+  
   contactInfo: {
     phone: string;
     email: string;
@@ -193,6 +199,12 @@ if (!localStorage.getItem('footerContent')) {
 
 if (!localStorage.getItem('siteContent')) {
   const defaultContent: SiteContent = {
+    // Site-wide settings
+    siteName: "B Studio",
+    siteDescription: "סטודיו בוטיק למיתוג ויצירת חוויה דיגיטלית",
+    heroOverlayColor: "0, 0, 0",
+    heroOverlayOpacity: "0.4",
+    
     contactInfo: {
       phone: '050-1234567',
       email: 'info@bstudio.com',
@@ -205,7 +217,7 @@ if (!localStorage.getItem('siteContent')) {
       aboutUsTitle: 'קצת עלינו',
       aboutUsDescription: 'אנחנו סטודיו בוטיק המתמחה במיתוג, עיצוב גרפי ובניית אתרים. הסטודיו הוקם מתוך אהבה ליצירה ורצון לעזור לעסקים לצמוח ולגדול בעזרת כלים דיגיטליים. הניסיון והידע שלנו מאפשרים לנו להעניק ללקוחותינו פתרונות מותאמים אישית, תוך הקפדה על איכות, חדשנות ויצירתיות.',
     },
-    // New expanded fields
+    // Default expanded fields
     heroTitle: 'סטודיו בוטיק למיתוג ויצירת חוויה דיגיטלית',
     heroSubtitle: 'אנחנו עוזרים לעסקים לבנות מותג חזק ולספר את הסיפור שלהם בדיגיטל',
     heroCtaText: 'צור קשר',
@@ -224,12 +236,13 @@ if (!localStorage.getItem('siteContent')) {
     aboutText: 'אנחנו סטודיו בוטיק המתמחה במיתוג, עיצוב גרפי ובניית אתרים.',
     footerText: '© {year} B Studio. כל הזכויות שמורות.',
     logoUrl: '',
+    logoLink: '/', // Added default value for logoLink
     servicesTitle: 'השירותים שלנו',
-    servicesDescription: 'אנו מציעים מגוון שירותים מקצועיים בתחומי העיצוב והדיגיטל',
+    servicesDescription: 'אנו מציעים מגוון שירותים מקצועיים',
     primaryColor: '#9b87f5',
     secondaryColor: '#7E69AB',
     accentColor: '#6E59A5',
-    // Add mapSettings
+    // Add default mapSettings
     mapSettings: {
       showMap: true,
       latitude: "32.07373882655249",
@@ -300,6 +313,12 @@ export function recordPageView(path: string = window.location.pathname): void {
 export function getSiteContent(): SiteContent {
   const content = localStorage.getItem('siteContent');
   return content ? JSON.parse(content) : {
+    // Default site-wide settings
+    siteName: "B Studio",
+    siteDescription: "סטודיו בוטיק למיתוג ויצירת חוויה דיגיטלית", 
+    heroOverlayColor: "0, 0, 0",
+    heroOverlayOpacity: "0.4",
+    
     contactInfo: {
       phone: '050-1234567',
       email: 'info@bstudio.com',
