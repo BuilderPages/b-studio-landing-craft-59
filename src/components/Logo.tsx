@@ -15,9 +15,14 @@ const Logo: React.FC<LogoProps> = ({ className }) => {
   const isNavTransparent = window.location.pathname === "/" && window.scrollY < 20;
 
   return (
-    <Link to={logoLink} className={cn("flex items-center justify-end gap-2 no-underline", className)}>
+    <Link 
+      to={logoLink} 
+      className={cn("flex items-center justify-end gap-2 no-underline", className)}
+      aria-label="לוגו - דף הבית"
+      title="דף הבית"
+    >
       {logoUrl ? (
-        <img src={logoUrl} alt="B Studio Logo" className="h-8" />
+        <img src={logoUrl} alt="B Studio Logo" className="h-8" loading="lazy" />
       ) : (
         <>
           <div className="relative h-8 w-8 overflow-hidden">

@@ -31,6 +31,8 @@ const Footer = () => {
                   key={index}
                   to={link.url} 
                   className="text-gray-600 hover:text-bstudio-primary transition-colors"
+                  title={link.label}
+                  aria-label={`ניווט אל ${link.label}`}
                 >
                   {link.label}
                 </Link>
@@ -46,6 +48,8 @@ const Footer = () => {
                   key={index}
                   to={link.url} 
                   className="text-gray-600 hover:text-bstudio-primary transition-colors"
+                  title={link.label}
+                  aria-label={`ניווט אל ${link.label}`}
                 >
                   {link.label}
                 </Link>
@@ -65,11 +69,21 @@ const Footer = () => {
 
         <div className="border-t mt-8 pt-8 text-center md:flex md:justify-between">
           <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-4 md:mb-0">
-            <Link to="/privacy" className="text-gray-600 hover:text-bstudio-primary text-sm">
+            <Link 
+              to="/privacy" 
+              className="text-gray-600 hover:text-bstudio-primary text-sm"
+              title="מדיניות פרטיות"
+              aria-label="מדיניות פרטיות"
+            >
               מדיניות פרטיות
             </Link>
             <span className="text-gray-300">|</span>
-            <Link to="/accessibility" className="text-gray-600 hover:text-bstudio-primary text-sm">
+            <Link 
+              to="/accessibility" 
+              className="text-gray-600 hover:text-bstudio-primary text-sm"
+              title="הצהרת נגישות"
+              aria-label="הצהרת נגישות"
+            >
               הצהרת נגישות
             </Link>
           </div>
@@ -85,6 +99,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-bstudio-primary"
                 aria-label={`בקר אותנו ב${social.name}`}
+                title={social.name}
               >
                 <span className="sr-only">{social.name}</span>
                 <div dangerouslySetInnerHTML={{ __html: social.icon }} />

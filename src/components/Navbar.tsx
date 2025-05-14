@@ -70,13 +70,15 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center">
-          <div className="flex items-center justify-center space-x-0">
+          <div className="flex items-center justify-center gap-6">
             {navItems.map((item) => (
               <Link
                 key={item.id}
                 to={item.url}
+                aria-label={`ניווט אל ${item.label}`}
+                title={item.label}
                 className={cn(
-                  "text-lg transition-colors px-4",
+                  "text-lg transition-colors",
                   isTransparent
                     ? item.highlight
                       ? "text-white font-medium"
@@ -89,7 +91,7 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
-            <Link to="/contact" className="px-4">
+            <Link to="/contact" className="mx-1" aria-label="צור קשר" title="צור קשר">
               <Button
                 size="lg"
                 className={cn(
@@ -108,6 +110,7 @@ const Navbar = () => {
           className="md:hidden text-2xl"
           onClick={toggleMobileMenu}
           aria-label="תפריט"
+          title="תפריט"
         >
           <Menu 
             className={cn(
@@ -127,6 +130,8 @@ const Navbar = () => {
                 <Link
                   key={item.id}
                   to={item.url}
+                  aria-label={`ניווט אל ${item.label}`}
+                  title={item.label}
                   className={cn(
                     "text-lg",
                     item.highlight
@@ -138,8 +143,16 @@ const Navbar = () => {
                   {item.label}
                 </Link>
               ))}
-              <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>
-                <Button size="lg" className="bg-bstudio-primary hover:bg-bstudio-primary/90 text-white shadow-sm">
+              <Link 
+                to="/contact" 
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="צור קשר" 
+                title="צור קשר"
+              >
+                <Button 
+                  size="lg" 
+                  className="bg-bstudio-primary hover:bg-bstudio-primary/90 text-white shadow-sm"
+                >
                   צור קשר
                 </Button>
               </Link>
