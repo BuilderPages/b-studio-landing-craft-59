@@ -82,7 +82,7 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* High contrast mode */
+/* High contrast mode - updated for Forced Colors Mode */
 .high-contrast {
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
@@ -101,19 +101,23 @@
   --destructive: 0 100% 30%;
   --destructive-foreground: 0 0% 100%;
   --border: 0 0% 0%;
-  
-  /* Additional high contrast styles */
-  & a {
-    text-decoration: underline;
-    color: #000000;
-  }
-  
-  & button, & .button {
-    border: 2px solid #000000;
-  }
-  
-  & img {
-    filter: grayscale(100%);
+}
+
+@media (forced-colors: active) {
+  .high-contrast {
+    /* Forced colors specific styles */
+    & a {
+      text-decoration: underline;
+      color: CanvasText;
+    }
+    
+    & button, & .button {
+      border: 2px solid CanvasText;
+    }
+    
+    & img {
+      filter: grayscale(100%);
+    }
   }
 }
 

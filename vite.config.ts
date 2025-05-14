@@ -12,11 +12,11 @@ export default defineConfig(({ mode }) => ({
     headers: {
       // Security headers
       "X-Content-Type-Options": "nosniff",
-      "X-Frame-Options": "SAMEORIGIN",
-      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Content-Security-Policy": "frame-ancestors 'self'; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self'; font-src 'self'; object-src 'none'; media-src 'self'; child-src 'none';",
       "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
-      "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; object-src 'none'; media-src 'self'; child-src 'none';",
-      "Strict-Transport-Security": "max-age=31536000; includeSubDomains"
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+      "Cache-Control": "max-age=3600, must-revalidate",
     },
   },
   plugins: [

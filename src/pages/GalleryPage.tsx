@@ -4,6 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Gallery from "@/components/Gallery";
 import { getGalleryItems, recordPageView } from "@/services/database";
+import PageMeta from "@/components/PageMeta";
+import AccessibilityWidget from "@/components/AccessibilityWidget";
 
 const GalleryPage = () => {
   useEffect(() => {
@@ -15,6 +17,11 @@ const GalleryPage = () => {
 
   return (
     <div className="min-h-screen">
+      <PageMeta 
+        title="גלרית עבודות" 
+        description="צפו בעבודות הקודמות שלנו והתרשמו מהאיכות והמקצועיות" 
+        keywords="גלריה, עבודות, פרויקטים, עיצוב"
+      />
       <Navbar />
       <main className="pt-24 pb-12">
         <div className="container max-w-7xl mx-auto px-4">
@@ -29,6 +36,7 @@ const GalleryPage = () => {
         </div>
       </main>
       <Footer />
+      <AccessibilityWidget />
     </div>
   );
 };

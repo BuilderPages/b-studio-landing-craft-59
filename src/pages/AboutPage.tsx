@@ -1,15 +1,27 @@
 
-import React from "react";
-import { getSiteContent } from "@/services/database";
+import React, { useEffect } from "react";
+import { getSiteContent, recordPageView } from "@/services/database";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AccessibilityWidget from "@/components/AccessibilityWidget";
+import PageMeta from "@/components/PageMeta";
 
 const AboutPage = () => {
   const content = getSiteContent();
 
+  useEffect(() => {
+    // Record page view for analytics
+    recordPageView();
+  }, []);
+
   return (
     <div>
+      <PageMeta 
+        title="אודות" 
+        description="קצת עלינו ועל הדרך שלנו - סטודיו מקצועי לעיצוב ופיתוח"
+        keywords="אודות, סטודיו, עיצוב, מי אנחנו"
+      />
       <Navbar />
       <Hero 
         title={content.aboutTitle || "אודות"}
@@ -70,8 +82,9 @@ const AboutPage = () => {
               <div className="mt-8">
                 <img 
                   src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf"
-                  alt="צוות הסטודיו"
+                  alt="צוות הסטודיו במפגש תכנון שבועי"
                   className="w-full h-auto rounded-lg shadow-lg"
+                  loading="lazy"
                 />
                 <p className="text-sm text-gray-500 mt-2">צוות הסטודיו במפגש תכנון שבועי</p>
               </div>
@@ -80,6 +93,7 @@ const AboutPage = () => {
         </div>
       </section>
       <Footer />
+      <AccessibilityWidget />
     </div>
   );
 };

@@ -71,8 +71,9 @@ const AccessibilityWidget: React.FC = () => {
           <Button 
             className="rounded-full w-12 h-12 flex items-center justify-center bg-bstudio-primary hover:bg-bstudio-primary/90 text-white"
             aria-label="הגדרות נגישות"
+            title="הגדרות נגישות"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/>
               <path d="m16.24 7.76-8.48 8.48"/>
               <path d="m7.76 7.76 8.48 8.48"/>
@@ -96,6 +97,7 @@ const AccessibilityWidget: React.FC = () => {
                     size="sm" 
                     onClick={decreaseFontSize}
                     aria-label="הקטן גודל טקסט"
+                    title="הקטן גודל טקסט"
                   >
                     א-
                   </Button>
@@ -104,6 +106,7 @@ const AccessibilityWidget: React.FC = () => {
                     size="sm" 
                     onClick={resetFontSize}
                     aria-label="אפס גודל טקסט"
+                    title="אפס גודל טקסט"
                   >
                     איפוס
                   </Button>
@@ -112,6 +115,7 @@ const AccessibilityWidget: React.FC = () => {
                     size="sm" 
                     onClick={increaseFontSize}
                     aria-label="הגדל גודל טקסט"
+                    title="הגדל גודל טקסט"
                   >
                     א+
                   </Button>
@@ -127,6 +131,7 @@ const AccessibilityWidget: React.FC = () => {
                       : 'border border-gray-300 bg-white'
                   }`}
                   aria-pressed={highContrast}
+                  title="מצב ניגודיות גבוהה"
                 >
                   <span className={highContrast ? 'text-white' : 'text-gray-800'}>
                     ניגודיות גבוהה
@@ -138,6 +143,7 @@ const AccessibilityWidget: React.FC = () => {
                 <a 
                   href="/accessibility" 
                   className="text-sm text-bstudio-primary hover:underline"
+                  title="הצהרת נגישות מלאה"
                 >
                   הצהרת נגישות מלאה
                 </a>
