@@ -8,19 +8,22 @@
     // Single Page Apps for GitHub Pages
     // MIT License
     // https://github.com/rafgraph/spa-github-pages
-    var pathSegmentsToKeep = 1;
-
+    var segmentCount = 1; // Change this to match your repo name depth
+    
     var l = window.location;
     l.replace(
       l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+      l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
+      l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
       (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
       l.hash
     );
   </script>
 </head>
 <body>
-  Redirecting...
+  <div style="text-align:center; font-family: 'Heebo', sans-serif; direction: rtl; margin-top: 50px;">
+    <h1>מעבר לדף...</h1>
+    <p>אם אינך מועבר באופן אוטומטי, <a href="/">לחץ כאן</a> כדי לחזור לדף הראשי.</p>
+  </div>
 </body>
 </html>
