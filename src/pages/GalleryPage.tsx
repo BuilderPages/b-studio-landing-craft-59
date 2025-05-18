@@ -20,7 +20,7 @@ const GalleryPage = () => {
     
     // If no items exist, create example items
     if (galleryItems.length === 0) {
-      const exampleItems: Omit<GalleryItem, "id">[] = [
+      const exampleItems = [
         {
           title: "עיצוב לוגו לחברת טכנולוגיה",
           category: "עיצוב גרפי",
@@ -73,7 +73,7 @@ const GalleryPage = () => {
       
       // Save example items
       exampleItems.forEach(item => {
-        saveGalleryItem(item);
+        saveGalleryItem(item as any);
       });
       
       // Get updated items list
