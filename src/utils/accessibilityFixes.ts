@@ -11,6 +11,14 @@ export const applyAccessibilityFixes = (): void => {
   } else {
     runFixes();
   }
+  
+  // Also run fixes when DOM content changes
+  const observer = new MutationObserver(() => {
+    runFixes();
+  });
+  
+  // Start observing the document with the configured parameters
+  observer.observe(document.body, { childList: true, subtree: true });
 };
 
 /**
@@ -28,9 +36,6 @@ const runFixes = (): void => {
   
   // Add missing title attributes to buttons
   addMissingTitles();
-  
-  // Replace deprecated -ms-high-contrast styles with Forced Colors Mode
-  replaceDeprecatedHighContrast();
 };
 
 /**
@@ -79,52 +84,6 @@ const addMissingTitles = (): void => {
       inputElement.setAttribute('title', placeholder);
     }
   });
-};
-
-/**
- * Replace deprecated -ms-high-contrast styles with modern Forced Colors Mode
- */
-const replaceDeprecatedHighContrast = (): void => {
-  // Create a style element to add our forced-colors replacement
-  const style = document.createElement('style');
-  
-  // Add modern forced-colors mode alternatives
-  style.textContent = `
-    @media (forced-colors: active) {
-      /* General elements */
-      a:focus {
-        outline: 2px solid CanvasText;
-      }
-      button:focus {
-        outline: 2px solid CanvasText;
-      }
-      input:focus, textarea:focus, select:focus {
-        outline: 2px solid CanvasText;
-      }
-      
-      /* Interactive elements */
-      button, .button, [role="button"] {
-        forced-color-adjust: none;
-        color: ButtonText;
-        background-color: ButtonFace;
-        border: 1px solid ButtonText;
-      }
-      
-      /* Links */
-      a {
-        color: LinkText;
-      }
-      
-      /* Enhanced focus styles */
-      *:focus-visible {
-        outline: 2px solid Highlight;
-        outline-offset: 2px;
-      }
-    }
-  `;
-  
-  // Append to head
-  document.head.appendChild(style);
 };
 
 // Auto-initialize on import

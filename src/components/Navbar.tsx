@@ -11,7 +11,7 @@ import { Menu } from "lucide-react";
 const defaultNavItems = [
   { id: "1", label: "דף הבית", url: "/", highlight: false },
   { id: "2", label: "שירותים", url: "/services", highlight: false },
-  { id: "3", label: "עבודות", url: "/gallery", highlight: false },
+  { id: "3", label: "גלריה", url: "/gallery", highlight: false },
   { id: "4", label: "אודות", url: "/about", highlight: false },
 ];
 
@@ -75,7 +75,7 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center">
-          <div className="flex items-center justify-center space-x-reverse space-x-6">
+          <div className="flex items-center justify-center space-x-8 space-x-reverse">
             {navItems.map((item) => (
               <Link
                 key={item.id}
