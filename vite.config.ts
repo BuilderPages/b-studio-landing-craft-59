@@ -6,10 +6,12 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Get the repository name from package.json or environment variable
+  // Determine base path based on environment
   const baseConfig = process.env.GITHUB_REPOSITORY 
     ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
     : '/';
+  
+  console.log(`Building with base: ${baseConfig}`);
   
   return {
     server: {
@@ -48,7 +50,9 @@ export default defineConfig(({ mode }) => {
           assetFileNames: 'assets/[name].[hash].[ext]'
         }
       },
+      // Ensure that we properly handle the public path
+      emptyOutDir: true
     },
-    base: baseConfig,
+    base: baseConfig
   };
 });
